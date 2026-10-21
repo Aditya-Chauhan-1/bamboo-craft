@@ -2,283 +2,1121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Bamboo Artisan - Shahdol Heritage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Virtual Bamboo Artisan · Shahdol Heritage · Enterprise Edition</title>
+    
+    <!-- Tailwind via CDN with custom configuration -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                    },
+                    colors: {
+                        bamboo: {
+                            50: '#f7f9f0',
+                            100: '#eef3e0',
+                            200: '#d9e6c0',
+                            300: '#bdd49a',
+                            400: '#9ebd6d',
+                            500: '#7fa54a',
+                            600: '#648a38',
+                            700: '#4d6b2c',
+                            800: '#3d5525',
+                            900: '#334721',
+                        },
+                        earth: {
+                            50: '#faf8f5',
+                            100: '#f2ede6',
+                            200: '#e4d9cb',
+                            300: '#d1bfa8',
+                            400: '#b99e7f',
+                            500: '#a68564',
+                            600: '#8f6e52',
+                            700: '#765845',
+                            800: '#61483b',
+                            900: '#513d33',
+                        },
+                        gold: {
+                            50: '#fefce8',
+                            100: '#fef9c3',
+                            200: '#fef08a',
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                            800: '#854d0e',
+                            900: '#713f12',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slide-hint': 'slideHint 1.5s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        slideHint: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(8px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(12px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.6' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Three.js and OrbitControls -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+    <!-- Custom Stylesheet -->
     <style>
+        /* ---------- Global reset & Base ---------- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fdfbf7;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #faf8f5;
             color: #3e2723;
-            overflow-x: hidden;
-        }
-        h1, h2, h3, .serif-text {
-            font-family: 'Playfair Display', serif;
-        }
-        .bamboo-bg {
-            background-image: repeating-linear-gradient(
-                90deg,
-                #dcedc8,
-                #dcedc8 10px,
-                #c5e1a5 10px,
-                #c5e1a5 12px
-            );
-            border-bottom: 4px solid #7cb342;
-        }
-        .wood-panel {
-            background-color: #efebe4;
-            border: 1px solid #d7ccc8;
-            box-shadow: inset 0 0 10px rgba(141, 110, 99, 0.1);
-        }
-        canvas {
-            background-color: #fff8e1;
-            border-radius: 8px;
-            box-shadow: inset 0px 4px 15px rgba(0,0,0,0.1);
-            cursor: pointer;
-        }
-        .toast {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateY(20px);
-            opacity: 0;
-        }
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .zen-mode header,
-        .zen-mode aside {
-            display: none !important;
-        }
-        .zen-mode main {
+            display: flex;
+            flex-direction: column;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            position: relative;
+            background: radial-gradient(circle at 20% 10%, #fdfbf7 0%, #f5f0e8 40%, #e8e0d5 100%);
+        }
+
+        /* ---------- Scrollbar styling ---------- */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b99e7f;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8f6e52;
+        }
+
+        /* ---------- Typography ---------- */
+        h1, h2, h3, h4, .serif-text {
+            font-family: 'Playfair Display', Georgia, serif;
+            letter-spacing: -0.01em;
+        }
+
+        /* ---------- Layout & Panels ---------- */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #dcedc8 0%, #c5e1a5 50%, #aed581 100%);
+            border-bottom: 3px solid #7cb342;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+            position: relative;
+            z-index: 40;
+            padding: 0.6rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        @media (min-width: 1024px) {
+            .app-header {
+                padding: 0.75rem 2rem;
+            }
+        }
+
+        /* Main area */
+        .app-main {
+            flex: 1 1 0%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        @media (min-width: 768px) {
+            .app-main {
+                flex-direction: row;
+            }
+        }
+
+        /* Left Panel */
+        .panel-left {
+            background: linear-gradient(180deg, #f8f4ed 0%, #efebe4 100%);
+            border-right: 1px solid #d7ccc8;
+            box-shadow: inset -4px 0 12px rgba(141, 110, 99, 0.06), 4px 0 24px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex-shrink: 0;
+            z-index: 20;
+            padding: 1rem;
+            gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .panel-left {
+                width: 33.3333%;
+                max-width: 380px;
+                padding: 1.25rem;
+            }
+        }
+        @media (min-width: 1280px) {
+            .panel-left {
+                width: 25%;
+                max-width: 400px;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Right Panel */
+        .panel-right {
+            background: linear-gradient(180deg, #f8f4ed 0%, #efebe4 100%);
+            border-left: 1px solid #d7ccc8;
+            box-shadow: inset 4px 0 12px rgba(141, 110, 99, 0.06), -4px 0 24px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex-shrink: 0;
+            z-index: 20;
+            padding: 1rem;
+            gap: 0.75rem;
+        }
+        @media (min-width: 768px) {
+            .panel-right {
+                width: 25%;
+                max-width: 340px;
+                padding: 1.25rem;
+            }
+        }
+        @media (min-width: 1280px) {
+            .panel-right {
+                width: 22%;
+                max-width: 360px;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Center stage */
+        .stage-center {
+            flex: 1 1 0%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(160deg, #f5f3ef 0%, #e8e4dc 100%);
+            position: relative;
+            padding: 0.5rem;
+            min-height: 0;
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .stage-center {
+                padding: 1rem;
+            }
+        }
+
+        /* Canvas container */
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: min(90vw, 680px);
+            aspect-ratio: 1 / 1;
+            flex-shrink: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+            background: #fff8e1;
+            touch-action: none;
+        }
+        @media (min-width: 1024px) {
+            .canvas-wrapper {
+                max-width: min(75vw, 720px);
+            }
+        }
+        @media (min-width: 1440px) {
+            .canvas-wrapper {
+                max-width: 800px;
+            }
+        }
+
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 16px;
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        /* Drag hint */
+        .drag-hint {
+            position: absolute;
+            left: 0;
+            display: none;
+            align-items: center;
+            justify-content: flex-start;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 20;
+            padding-left: 4px;
+        }
+        .drag-hint.show {
+            display: flex;
+        }
+        .drag-hint .hint-bubble {
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #713f12;
+            padding: 4px 12px 4px 10px;
+            border-radius: 0 20px 20px 0;
+            box-shadow: 2px 2px 12px rgba(234, 179, 8, 0.4);
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #ca8a04;
+            border-left: none;
+            animation: slideHint 1.5s ease-in-out infinite;
+            white-space: nowrap;
+        }
+        @media (min-width: 768px) {
+            .drag-hint .hint-bubble {
+                font-size: 12px;
+                padding: 5px 14px 5px 12px;
+            }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: linear-gradient(135deg, #1f2937, #111827);
+            color: #f9fafb;
+            padding: 0.75rem 1.75rem;
+            border-radius: 9999px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 90vw;
+            text-align: center;
+            letter-spacing: 0.01em;
+            backdrop-filter: blur(8px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Zen mode */
+        .zen-mode .app-header,
+        .zen-mode .panel-left,
+        .zen-mode .panel-right {
+            display: none !important;
+        }
+        .zen-mode .app-main {
+            flex-direction: row;
+        }
+        .zen-mode .stage-center {
+            width: 100vw;
+            height: 100vh;
+            padding: 0;
+        }
+        .zen-mode .canvas-wrapper {
+            max-width: min(95vw, 95vh);
+            max-height: min(95vw, 95vh);
+            border-radius: 12px;
         }
         .zen-mode #exit-zen-btn {
             display: flex !important;
         }
-        @keyframes slideHint {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(8px); }
+
+        /* Mode toggle */
+        .mode-toggle {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 9999px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            display: flex;
+            padding: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
         }
-        .animate-slide-hint {
-            animation: slideHint 1.5s ease-in-out infinite;
+        .mode-toggle button {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            background: transparent;
         }
+        @media (min-width: 768px) {
+            .mode-toggle button {
+                font-size: 12px;
+                padding: 7px 18px;
+            }
+        }
+        .mode-toggle button.active-craft {
+            background: linear-gradient(135deg, #4d6b2c, #3d5525);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(77, 107, 44, 0.3);
+        }
+        .mode-toggle button.active-view {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        .mode-toggle button:not(.active-craft):not(.active-view) {
+            color: #6b7280;
+        }
+        .mode-toggle button:not(.active-craft):not(.active-view):hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            letter-spacing: 0.01em;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+        .btn-primary:disabled,
+        .btn-primary.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            transform: none;
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, #4d6b2c, #3d5525);
+            color: #fff;
+        }
+        .btn-green:hover:not(:disabled) {
+            background: linear-gradient(135deg, #5a7d35, #4a6a2c);
+            box-shadow: 0 6px 20px rgba(77, 107, 44, 0.35);
+        }
+
+        .btn-amber {
+            background: linear-gradient(135deg, #b45309, #92400e);
+            color: #fff;
+        }
+        .btn-amber:hover:not(:disabled) {
+            background: linear-gradient(135deg, #ca6a1a, #a34f0e);
+            box-shadow: 0 6px 20px rgba(180, 83, 9, 0.35);
+        }
+
+        /* Inputs */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #bdd49a, #7fa54a);
+            outline: none;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #4d6b2c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s;
+            cursor: grab;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+        }
+        input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #4d6b2c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            cursor: grab;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1.5px solid #d1bfa8;
+            border-radius: 0.6rem;
+            background: #fff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #3e2723;
+            transition: all 0.2s;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238f6e52' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 12px;
+        }
+        select:focus {
+            border-color: #7fa54a;
+            box-shadow: 0 0 0 3px rgba(127, 165, 74, 0.15);
+        }
+        select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f4;
+        }
+
+        /* Stage badge */
+        .stage-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #4d6b2c, #3d5525);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(77, 107, 44, 0.3);
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            .stage-badge {
+                font-size: 11px;
+                padding: 5px 14px;
+            }
+        }
+
+        /* Cultural lore images */
+        .culture-image {
+            width: 100%;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            object-fit: cover;
+            aspect-ratio: 16/10;
+            background: #e4d9cb;
+        }
+        .culture-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Instruction text */
+        .instruction-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #4b5563;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 100%;
+            padding: 0 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .instruction-text {
+                font-size: 1.05rem;
+            }
+        }
+
+        /* Focus mode exit button */
+        #exit-zen-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: #1f2937;
+            color: #fff;
+            border-radius: 9999px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        #exit-zen-btn:hover {
+            background: #374151;
+            transform: scale(1.03);
+        }
+
+        /* Section headers */
+        .section-header {
+            font-size: 1.15rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: #4d6b2c;
+            border-bottom: 2px solid #bdd49a;
+            padding-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Card-like control blocks */
+        .control-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 0.85rem;
+            padding: 0.85rem;
+            border: 1px solid rgba(209, 191, 168, 0.3);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+        .control-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Hidden elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive touch feedback */
+        @media (hover: none) {
+            .btn-primary:hover {
+                transform: none;
+            }
+            .btn-primary:active {
+                transform: scale(0.96);
+            }
+        }
+
+        /* Smooth transitions for panels */
+        .panel-left,
+        .panel-right {
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Loading shimmer (for the canvas while initializing) */
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Ensure touch targets are at least 44px */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Scroll lock for body */
+        body {
+            overscroll-behavior: none;
+        }
+
+        /* Better focus outlines for accessibility */
+        :focus-visible {
+            outline: 2px solid #4d6b2c;
+            outline-offset: 2px;
+        }
+        button:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        /* Prevent text selection on UI elements */
+        .no-select {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Fullscreen canvas on zen mode */
+        .zen-mode canvas {
+            border-radius: 8px;
+        }
+
+        /* Debug outline (disabled) */
+        /* * { outline: 1px solid red; } */
     </style>
 </head>
-<body class="h-screen flex flex-col transition-all duration-300">
+<body class="no-select">
 
-    <header class="bamboo-bg py-2 px-6 flex justify-between items-center shadow-md z-10 transition-all">
-        <div>
-            <h1 class="text-2xl font-bold text-green-900 tracking-wide">The Virtual Bamboo Artisan</h1>
-            <p class="text-green-800 text-xs font-medium">Preserving the Craft of Shahdol's Tribes</p>
-        </div>
-        <div class="flex items-center gap-3">
-            <span class="px-3 py-1 bg-green-700 text-white rounded-full text-xs font-bold hidden sm:inline-block" id="stage-badge">Stage: Preparation</span>
-            
-            <div id="mode-toggle" class="bg-white/90 backdrop-blur rounded-full shadow flex p-1 z-30 border border-gray-200 transition-all duration-300">
-                <button id="btn-mode-craft" onclick="setMode('craft')" class="px-4 py-1.5 rounded-full text-xs font-bold bg-green-700 text-white transition-colors">Craft Mode</button>
-                <button id="btn-mode-view" onclick="setMode('view')" class="px-4 py-1.5 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors">View Mode</button>
+    <div class="app-container" id="app-container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="app-header">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="flex-shrink-0">
+                    <svg class="w-8 h-8 md:w-10 md:h-10 text-green-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2C8 2 4 5 4 10c0 3 2 5 3 6l2 2c1 1 2 2 3 2s2-1 3-2l2-2c1-1 3-3 3-6 0-5-4-8-8-8z" />
+                        <path d="M12 8v8" />
+                        <path d="M8 12h8" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <h1 class="text-lg md:text-2xl font-bold text-green-900 tracking-tight leading-tight truncate">
+                        Virtual Bamboo Artisan
+                    </h1>
+                    <p class="text-green-800/80 text-[10px] md:text-xs font-medium tracking-wide truncate">
+                        Preserving the Craft of Shahdol's Tribes
+                    </p>
+                </div>
             </div>
-            
-            <button onclick="toggleZenMode()" id="zen-btn" class="hidden md:flex items-center gap-1 px-3 py-1.5 bg-green-100 hover:bg-green-200 text-green-900 rounded shadow text-xs font-semibold transition border border-green-300">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg> Focus Mode
-            </button>
-            
-            <button onclick="resetSim()" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded shadow text-xs font-semibold transition border border-amber-300">Start Over</button>
-        </div>
-    </header>
 
-    <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-        
-        <!-- Left Panel: Controls -->
-        <aside class="w-full md:w-1/3 lg:w-1/4 wood-panel p-6 flex flex-col gap-6 overflow-y-auto z-10 shadow-lg">
-            
-            <div id="prep-controls" class="space-y-4">
-                <h2 class="text-xl font-bold border-b border-amber-900 pb-2">1. Material Prep</h2>
-                <p class="text-sm text-gray-700">Before weaving a <i>Tokri</i>, the Baiga artisans prepare bamboo. Adjust the moisture level before splitting.</p>
-                
-                <div class="space-y-2">
-                    <label for="moisture" class="flex justify-between text-sm font-semibold">
-                        <span>Bamboo Moisture</span>
-                        <span id="moisture-val">50%</span>
-                    </label>
-                    <input type="range" id="moisture" min="0" max="100" value="50" class="w-full accent-green-600">
-                    <p id="moisture-feedback" class="text-xs text-amber-700 italic">Ideal moisture makes bamboo flexible. Too dry snaps; too wet molds.</p>
+            <div class="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                <span class="stage-badge hidden sm:inline-flex" id="stage-badge">Stage: Preparation</span>
+
+                <!-- Mode Toggle -->
+                <div id="mode-toggle" class="mode-toggle">
+                    <button id="btn-mode-craft" onclick="setMode('craft')" class="active-craft">
+                        ✦ Craft
+                    </button>
+                    <button id="btn-mode-view" onclick="setMode('view')">
+                        ◉ View
+                    </button>
                 </div>
 
-                <button onclick="splitBamboo()" class="w-full py-3 bg-green-800 hover:bg-green-700 text-white rounded-lg font-bold shadow-md transition-colors">
-                    Split & Shave Bamboo (Kamchis)
+                <!-- Focus Mode Button -->
+                <button onclick="toggleZenMode()" id="zen-btn" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-green-100 hover:bg-green-200 text-green-900 rounded-lg shadow-sm text-xs font-bold transition-all border border-green-300 touch-target">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    <span class="hidden lg:inline">Focus</span>
+                </button>
+
+                <!-- Reset Button -->
+                <button onclick="resetSim()" class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg shadow-sm text-xs font-bold transition-all border border-amber-300 touch-target">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span class="hidden sm:inline">Reset</span>
                 </button>
             </div>
+        </header>
 
-            <div id="weave-controls" class="space-y-4 opacity-50 pointer-events-none transition-opacity duration-300">
-                <h2 class="text-xl font-bold border-b border-amber-900 pb-2">2. Weaving Process</h2>
-                <p class="text-sm text-gray-700">Select a traditional pattern to weave your Kamchis.</p>
-                
-                <div class="space-y-3">
-                    <label class="block text-sm font-semibold">Weaving Pattern</label>
-                    <select id="pattern-select" onchange="changePattern()" class="w-full p-2 border border-amber-300 rounded bg-white text-sm">
-                        <option value="checkerboard">Checkerboard (Basic Tokri)</option>
-                        <option value="twill">Twill 2/2 (Grain Storage)</option>
-                        <option value="twill31">Twill 3/1 (Heavy Load Dala)</option>
-                        <option value="herringbone">Herringbone (Decorative Zig-Zag)</option>
-                    </select>
+        <!-- ===== MAIN AREA ===== -->
+        <div class="app-main">
+
+            <!-- LEFT PANEL: Controls -->
+            <aside class="panel-left" id="panel-left">
+
+                <!-- Section 1: Material Prep -->
+                <div id="prep-controls" class="space-y-4 animate-fade-in-up">
+                    <h2 class="section-header">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                        1. Material Prep
+                    </h2>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Before weaving a <i class="serif-text font-semibold text-amber-800">Tokri</i>, the Baiga artisans prepare bamboo. Adjust moisture before splitting.
+                    </p>
+
+                    <div class="control-card space-y-3">
+                        <div class="flex justify-between items-center">
+                            <label for="moisture" class="text-sm font-bold text-gray-700 flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                                Bamboo Moisture
+                            </label>
+                            <span id="moisture-val" class="text-sm font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-md">50%</span>
+                        </div>
+                        <input type="range" id="moisture" min="0" max="100" value="50" class="w-full">
+                        <p id="moisture-feedback" class="text-xs text-green-600 font-semibold leading-snug">
+                            Optimal moisture! Flexible and strong.
+                        </p>
+                    </div>
+
+                    <button onclick="splitBamboo()" class="btn-primary btn-green">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                        Split & Shave Bamboo (Kamchis)
+                    </button>
                 </div>
-            </div>
 
-            <div id="shape-controls" class="space-y-4 opacity-50 pointer-events-none hidden transition-opacity duration-300">
-                <h2 class="text-xl font-bold border-b border-amber-900 pb-2">3. Shaping the Object</h2>
-                <p class="text-sm text-gray-700">Bend and bind the woven mat into its final 3D form.</p>
-                
-                <div class="space-y-3">
-                    <label class="block text-sm font-semibold">Final Artifact</label>
-                    <select id="shape-select" class="w-full p-2 border border-amber-300 rounded bg-white text-sm">
-                        <option value="tokri">Tokri (Deep Basket)</option>
-                        <option value="kothi">Kothi (Storage Silo)</option>
-                        <option value="dala">Dala (Wide Tray)</option>
-                    </select>
-                </div>
+                <!-- Section 2: Weaving Process -->
+                <div id="weave-controls" class="space-y-4 opacity-50 pointer-events-none transition-all duration-300 mt-2">
+                    <h2 class="section-header">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                        </svg>
+                        2. Weaving Process
+                    </h2>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Select a traditional pattern to weave your Kamchis.
+                    </p>
 
-                <button id="btn-prepare-skeleton" onclick="prepareSkeleton()" class="w-full py-3 bg-amber-700 hover:bg-amber-600 text-white rounded-lg font-bold shadow-md transition-colors">
-                    Build Skeleton Frame
-                </button>
-                
-                <div id="skeleton-prep-ui" class="hidden space-y-3 mt-4 bg-amber-50 p-3 rounded border border-amber-200">
-                    <label class="block text-sm font-semibold text-amber-900">Bend Bamboo Framework</label>
-                    <input type="range" id="skeleton-slider" min="0" max="100" value="0" class="w-full accent-amber-600">
-                    <p id="skeleton-instruction" class="text-xs text-amber-800 italic">Drag the slider to bend the straight bamboo into structural rings.</p>
-                </div>
-
-                <button id="btn-wrap-mat" onclick="shapeObject()" class="hidden w-full py-3 bg-green-700 hover:bg-green-600 text-white rounded-lg font-bold shadow-md transition-colors mt-4">
-                    Wrap Mat & Bind Artifact
-                </button>
-            </div>
-        </aside>
-
-        <section class="flex-1 bg-gray-100 p-6 flex flex-col items-center justify-center relative shadow-inner transition-all duration-300">
-            <button onclick="toggleZenMode()" id="exit-zen-btn" class="hidden absolute top-4 right-4 z-50 px-4 py-2 bg-gray-800 text-white rounded-full shadow-lg text-sm font-bold items-center gap-2 hover:bg-gray-700 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Exit Focus
-            </button>
-
-            <!-- Canvas Container -->
-            <div class="relative w-full max-w-2xl aspect-square">
-                <canvas id="sim-canvas" class="w-full h-full"></canvas>
-                
-                <div id="drag-hint" class="hidden absolute left-0 items-center justify-center pointer-events-none transition-all duration-300 z-20">
-                    <div class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-r-full shadow-md text-xs font-bold animate-slide-hint flex items-center gap-1 border border-yellow-500 border-l-0">
-                        <span>Drag</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <div class="control-card space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">Weaving Pattern</label>
+                        <select id="pattern-select" onchange="changePattern()">
+                            <option value="checkerboard">Checkerboard (Basic Tokri)</option>
+                            <option value="twill">Twill 2/2 (Grain Storage)</option>
+                            <option value="twill31">Twill 3/1 (Heavy Load Dala)</option>
+                            <option value="herringbone">Herringbone (Decorative Zig-Zag)</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Overlay for Stage 1 (Prep) -->
-                <div id="prep-visual" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div class="w-16 h-64 bg-green-600 rounded-full shadow-2xl transition-all duration-300 relative overflow-hidden" id="bamboo-stalk">
-                        <div class="absolute w-full h-1 bg-green-900 top-1/4 opacity-40"></div>
-                        <div class="absolute w-full h-1 bg-green-900 top-2/4 opacity-40"></div>
-                        <div class="absolute w-full h-1 bg-green-900 top-3/4 opacity-40"></div>
+                <!-- Section 3: Shaping -->
+                <div id="shape-controls" class="space-y-4 opacity-50 pointer-events-none hidden transition-all duration-300 mt-2">
+                    <h2 class="section-header">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+                        </svg>
+                        3. Shaping the Object
+                    </h2>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Bend and bind the woven mat into its final 3D form.
+                    </p>
+
+                    <div class="control-card space-y-3">
+                        <label class="block text-sm font-bold text-gray-700">Final Artifact</label>
+                        <select id="shape-select">
+                            <option value="tokri">Tokri (Deep Basket)</option>
+                            <option value="kothi">Kothi (Storage Silo)</option>
+                            <option value="dala">Dala (Wide Tray)</option>
+                        </select>
+                    </div>
+
+                    <button id="btn-prepare-skeleton" onclick="prepareSkeleton()" class="btn-primary btn-amber">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        Build Skeleton Frame
+                    </button>
+
+                    <div id="skeleton-prep-ui" class="hidden space-y-3 bg-amber-50/70 p-3 rounded-xl border border-amber-200/60 mt-3">
+                        <label class="block text-sm font-bold text-amber-900 flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            </svg>
+                            Bend Bamboo Framework
+                        </label>
+                        <input type="range" id="skeleton-slider" min="0" max="100" value="0" class="w-full accent-amber-600">
+                        <p id="skeleton-instruction" class="text-xs text-amber-800 italic leading-snug">
+                            Drag the slider to bend the straight bamboo into structural rings.
+                        </p>
+                    </div>
+
+                    <button id="btn-wrap-mat" onclick="shapeObject()" class="hidden btn-primary btn-green mt-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                        </svg>
+                        Wrap Mat & Bind Artifact
+                    </button>
+                </div>
+
+                <!-- Spacer for mobile scroll -->
+                <div class="h-4"></div>
+            </aside>
+
+            <!-- CENTER STAGE: Canvas -->
+            <section class="stage-center" id="stage-center">
+                <button onclick="toggleZenMode()" id="exit-zen-btn" class="flex">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Exit Focus
+                </button>
+
+                <!-- Canvas Container -->
+                <div class="canvas-wrapper" id="canvas-wrapper">
+                    <canvas id="sim-canvas"></canvas>
+
+                    <!-- Drag hint overlay -->
+                    <div id="drag-hint" class="drag-hint">
+                        <div class="hint-bubble">
+                            <span>Drag</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Stage 1 HTML overlay (bamboo stalk visual) -->
+                    <div id="prep-visual" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div class="w-16 h-64 bg-gradient-to-b from-green-500 via-green-600 to-green-700 rounded-full shadow-2xl transition-all duration-300 relative overflow-hidden" id="bamboo-stalk">
+                            <div class="absolute w-full h-0.5 bg-green-900/30 top-1/4"></div>
+                            <div class="absolute w-full h-0.5 bg-green-900/30 top-2/4"></div>
+                            <div class="absolute w-full h-0.5 bg-green-900/30 top-3/4"></div>
+                            <div class="absolute w-full h-0.5 bg-green-900/20 top-1/8"></div>
+                            <div class="absolute w-full h-0.5 bg-green-900/20 top-3/8"></div>
+                            <div class="absolute w-full h-0.5 bg-green-900/20 top-5/8"></div>
+                            <div class="absolute w-full h-0.5 bg-green-900/20 top-7/8"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="mt-4 text-center">
-                <p id="canvas-instruction" class="text-lg font-medium text-gray-700">Adjust moisture and prepare the bamboo.</p>
-            </div>
-        </section>
 
-        <aside class="w-full md:w-1/4 wood-panel p-6 overflow-y-auto flex flex-col z-10 shadow-lg">
-            <h2 class="text-2xl serif-text font-bold text-amber-900 mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                Cultural Lore
-            </h2>
-            <div id="culture-content" class="text-sm text-gray-800 space-y-4">
-                <p>Welcome to the heritage of <b>Shahdol</b>, Madhya Pradesh.</p>
-                <img src="https://placehold.co/400x250/7cb342/ffffff?text=Bamboo+Forest" alt="Bamboo Forest" class="rounded-lg shadow-sm w-full">
-                <p>Bamboo is known as "Green Gold." For indigenous tribes like the Baiga and Gond, it is central to life, used from cradle to grave.</p>
-                <p>Before weaving, a true artisan knows that the soul of the <i>Tokri</i> lies in the preparation of the <i>Kamchis</i> (splits). The moisture of the bamboo dictates its strength and flexibility.</p>
-            </div>
-        </aside>
-    </main>
+                <div class="mt-3 md:mt-4 text-center px-4">
+                    <p id="canvas-instruction" class="instruction-text">
+                        Adjust moisture and prepare the bamboo.
+                    </p>
+                </div>
+            </section>
 
-    <!-- Custom Toast Notification -->
-    <div id="toast" class="toast fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl text-sm font-medium z-50 pointer-events-none">
+            <!-- RIGHT PANEL: Cultural Lore -->
+            <aside class="panel-right" id="panel-right">
+                <h2 class="text-xl md:text-2xl serif-text font-bold text-amber-900 flex items-center gap-2 leading-tight">
+                    <svg class="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Cultural Lore
+                </h2>
+                <div id="culture-content" class="text-sm text-gray-800 space-y-4 leading-relaxed">
+                    <!-- Dynamic content inserted via JS -->
+                </div>
+                <div class="mt-auto pt-4 border-t border-earth-200/60">
+                    <p class="text-[10px] text-gray-400 text-center font-medium tracking-wide uppercase">
+                        Shahdol · Madhya Pradesh · India
+                    </p>
+                </div>
+            </aside>
+
+        </div>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
         Notification
     </div>
 
+    <!-- ===== SCRIPTS ===== -->
     <script>
+        // ============================================================
+        //  VIRTUAL BAMBOO ARTISAN — ENTERPRISE EDITION
+        //  Enhanced UI/UX · Responsive Design · Polished 3D
+        // ============================================================
+
+        // ---------- CULTURAL DATA ----------
         const cultureData = {
             prep: `
-                <p>Welcome to the heritage of <b>Shahdol</b>, Madhya Pradesh.</p>
-                <img src="https://placehold.co/400x250/7cb342/ffffff?text=Green+Gold" alt="Bamboo" class="rounded-lg shadow-sm w-full my-2">
-                <p>Bamboo is known as "Green Gold." For indigenous tribes like the Baiga and Gond, it is central to their livelihood.</p>
-                <p>The artisan carefully shaves the bamboo into flexible strips called <i>Kamchis</i>. If it's too dry, it breaks during weaving. If too wet, it develops fungal rot.</p>
+                <p class="text-sm leading-relaxed">Welcome to the heritage of <b>Shahdol</b>, Madhya Pradesh.</p>
+                <img src="https://images.unsplash.com/photo-1594489428504-5c0c480a15fa?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Bamboo Forest" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">Bamboo is known as <b class="text-green-800">"Green Gold."</b> For indigenous tribes like the Baiga and Gond, it is central to their livelihood.</p>
+                <p class="text-sm leading-relaxed">The artisan carefully shaves the bamboo into flexible strips called <i class="serif-text font-semibold text-amber-800">Kamchis</i>. If it's too dry, it breaks during weaving. If too wet, it develops fungal rot.</p>
+                <div class="bg-amber-50/60 rounded-xl p-3 border border-amber-200/50 mt-2">
+                    <p class="text-xs text-amber-800 flex items-start gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><b>Tip:</b> Optimal moisture is between 30–75%. Too dry or too wet will ruin the bamboo.</span>
+                    </p>
+                </div>
             `,
             checkerboard: `
-                <h3 class="font-bold text-amber-900 text-lg">The Checkerboard Weave</h3>
-                <img src="https://placehold.co/400x250/f59e0b/ffffff?text=Basic+Tokri" alt="Checkerboard Basket" class="rounded-lg shadow-sm w-full my-2">
-                <p>This is the most fundamental pattern: 1-over, 1-under. </p>
-                <p><b>Usage in Shahdol:</b> Baskets made with this pattern are highly porous but rigid. They are commonly used as simple <i>Tokris</i> for washing vegetables in local streams or carrying daily forage from the forests.</p>
+                <h3 class="font-bold text-amber-900 text-lg mb-1">The Checkerboard Weave</h3>
+                <img src="https://images.unsplash.com/photo-1594224457860-02d9c5b9a3e6?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Checkerboard Basket" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">This is the most fundamental pattern: <b>1-over, 1-under</b>.</p>
+                <p class="text-sm leading-relaxed"><b>Usage in Shahdol:</b> Baskets made with this pattern are highly porous but rigid. They are commonly used as simple <i class="serif-text font-semibold text-amber-800">Tokris</i> for washing vegetables in local streams or carrying daily forage from the forests.</p>
             `,
             twill: `
-                <h3 class="font-bold text-amber-900 text-lg">The Twill Weave (2/2)</h3>
-                <img src="https://placehold.co/400x250/d97706/ffffff?text=Grain+Storage" alt="Twill Basket" class="rounded-lg shadow-sm w-full my-2">
-                <p>A more advanced pattern: 2-over, 2-under, shifting by one on each row to create a diagonal structural grain.</p>
-                <p><b>Usage in Shahdol:</b> This dense weave creates a very tight, strong surface. It is often plastered with mud and cow dung to create large silos (Kothis) for storing harvested grain safely from pests.</p>
+                <h3 class="font-bold text-amber-900 text-lg mb-1">The Twill Weave (2/2)</h3>
+                <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Twill Basket" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">A more advanced pattern: <b>2-over, 2-under</b>, shifting by one on each row to create a diagonal structural grain.</p>
+                <p class="text-sm leading-relaxed"><b>Usage in Shahdol:</b> This dense weave creates a very tight, strong surface. It is often plastered with mud and cow dung to create large silos (Kothis) for storing harvested grain safely from pests.</p>
             `,
             twill31: `
-                <h3 class="font-bold text-amber-900 text-lg">The 3/1 Twill Weave</h3>
-                <img src="https://placehold.co/400x250/b45309/ffffff?text=Heavy+Load+Basket" alt="3/1 Twill Basket" class="rounded-lg shadow-sm w-full my-2">
-                <p>An asymmetrical twill pattern: 3-over, 1-under. It creates a robust ribbed texture on one side.</p>
-                <p><b>Usage in Shahdol:</b> The structural rigidity of this weave is incredible. Tribal communities use it to craft strong <i>Dalas</i> or <i>Bojhas</i> for carrying heavy loads like soil, rocks, or large forest harvests on their heads.</p>
+                <h3 class="font-bold text-amber-900 text-lg mb-1">The 3/1 Twill Weave</h3>
+                <img src="https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="3/1 Twill Basket" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">An asymmetrical twill pattern: <b>3-over, 1-under</b>. It creates a robust ribbed texture on one side.</p>
+                <p class="text-sm leading-relaxed"><b>Usage in Shahdol:</b> The structural rigidity of this weave is incredible. Tribal communities use it to craft strong <i class="serif-text font-semibold text-amber-800">Dalas</i> or <i class="serif-text font-semibold text-amber-800">Bojhas</i> for carrying heavy loads like soil, rocks, or large forest harvests on their heads.</p>
             `,
             herringbone: `
-                <h3 class="font-bold text-amber-900 text-lg">The Herringbone Weave</h3>
-                <img src="https://placehold.co/400x250/92400e/ffffff?text=Decorative+Zig-Zag" alt="Herringbone Basket" class="rounded-lg shadow-sm w-full my-2">
-                <p>Created by reversing the direction of a twill weave at regular intervals, resulting in a distinct zig-zag pattern.</p>
-                <p><b>Usage in Shahdol:</b> While structurally sound, the Herringbone is highly prized for its aesthetics. It is often used for special occasion baskets, gifting, or storing personal valuables within the household.</p>
+                <h3 class="font-bold text-amber-900 text-lg mb-1">The Herringbone Weave</h3>
+                <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Herringbone Basket" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">Created by reversing the direction of a twill weave at regular intervals, resulting in a distinct <b>zig-zag pattern</b>.</p>
+                <p class="text-sm leading-relaxed"><b>Usage in Shahdol:</b> While structurally sound, the Herringbone is highly prized for its aesthetics. It is often used for special occasion baskets, gifting, or storing personal valuables within the household.</p>
             `,
             finished: `
-                <h3 class="font-bold text-green-900 text-xl mb-2">Masterpiece Complete!</h3>
-                <p>You have successfully simulated the crafting of a traditional bamboo artifact.</p>
-                <p>By understanding the material properties and the mathematical patterns of the weave, you help preserve the ancient wisdom of the Shahdol artisans.</p>
+                <h3 class="font-bold text-green-900 text-xl mb-2">✨ Masterpiece Complete!</h3>
+                <p class="text-sm leading-relaxed">You have successfully simulated the crafting of a traditional bamboo artifact.</p>
+                <p class="text-sm leading-relaxed">By understanding the material properties and the mathematical patterns of the weave, you help preserve the ancient wisdom of the Shahdol artisans.</p>
+                <div class="bg-green-50/60 rounded-xl p-3 border border-green-200/50 mt-2">
+                    <p class="text-xs text-green-800 flex items-start gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Rotate the 3D model to inspect your handiwork. Every weave tells a story.</span>
+                    </p>
+                </div>
             `,
             tokri: `
-                <h3 class="font-bold text-amber-900 text-lg">The Tokri</h3>
-                <img src="https://placehold.co/400x250/f59e0b/ffffff?text=Tokri+Basket" alt="Tokri" class="rounded-lg shadow-sm w-full my-2">
-                <p>A versatile, deep basket used daily by the Baiga and Gond tribes. It is essential for foraging in the forest, washing vegetables in streams, and carrying items to the local haat (market).</p>
+                <h3 class="font-bold text-amber-900 text-lg mb-1">The Tokri</h3>
+                <img src="https://images.unsplash.com/photo-1594224457860-02d9c5b9a3e6?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Tokri Basket" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">A versatile, deep basket used daily by the Baiga and Gond tribes. It is essential for foraging in the forest, washing vegetables in streams, and carrying items to the local <i class="serif-text font-semibold text-amber-800">haat</i> (market).</p>
             `,
             kothi: `
-                <h3 class="font-bold text-amber-900 text-lg">The Kothi</h3>
-                <img src="https://placehold.co/400x250/d97706/ffffff?text=Kothi+Silo" alt="Kothi" class="rounded-lg shadow-sm w-full my-2">
-                <p>A tall, sturdy cylindrical structure. Once shaped, artisans often plaster it with a mix of mud and cow dung. It serves as a vital granary to protect harvested crops from moisture and pests.</p>
+                <h3 class="font-bold text-amber-900 text-lg mb-1">The Kothi</h3>
+                <img src="https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Kothi Silo" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">A tall, sturdy cylindrical structure. Once shaped, artisans often plaster it with a mix of mud and cow dung. It serves as a vital granary to protect harvested crops from moisture and pests.</p>
             `,
             dala: `
-                <h3 class="font-bold text-amber-900 text-lg">The Dala</h3>
-                <img src="https://placehold.co/400x250/b45309/ffffff?text=Dala+Tray" alt="Dala" class="rounded-lg shadow-sm w-full my-2">
-                <p>A wide, shallow tray renowned for its structural rigidity. It is perfectly designed to balance heavy loads on the head, commonly used for moving soil, rocks, or large forest harvests.</p>
+                <h3 class="font-bold text-amber-900 text-lg mb-1">The Dala</h3>
+                <img src="https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Dala Tray" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+                <p class="text-sm leading-relaxed">A wide, shallow tray renowned for its structural rigidity. It is perfectly designed to balance heavy loads on the head, commonly used for moving soil, rocks, or large forest harvests.</p>
             `
         };
 
-        // --- Simulation State ---
+        // ---------- SIMULATION STATE ----------
         let state = {
-            stage: 'prep', // 'prep', 'weave', 'shape_skeleton', 'done'
-            mode: 'craft', // 'craft' or 'view'
+            stage: 'prep',
+            mode: 'craft',
             moisture: 50,
             pattern: 'checkerboard',
-            kamchis: [], // Stores woven rows
+            kamchis: [],
             maxRows: 12,
             maxCols: 12,
             isReadyToWeave: false,
             isDragging: false,
-            dragProgress: 0, // 0 to 1
+            dragProgress: 0,
             selectedShape: 'tokri',
             skeletonProgress: 0
         };
 
-        // --- DOM Elements ---
+        // ---------- DOM ELEMENTS ----------
         const ui = {
             moistureSlider: document.getElementById('moisture'),
             moistureVal: document.getElementById('moisture-val'),
@@ -290,6 +1128,7 @@
             shapeControls: document.getElementById('shape-controls'),
             shapeSelect: document.getElementById('shape-select'),
             canvas: document.getElementById('sim-canvas'),
+            canvasWrapper: document.getElementById('canvas-wrapper'),
             instruction: document.getElementById('canvas-instruction'),
             cultureContent: document.getElementById('culture-content'),
             patternSelect: document.getElementById('pattern-select'),
@@ -298,134 +1137,249 @@
             modeToggle: document.getElementById('mode-toggle'),
             btnModeCraft: document.getElementById('btn-mode-craft'),
             btnModeView: document.getElementById('btn-mode-view'),
-            body: document.body
+            body: document.body,
+            panelLeft: document.getElementById('panel-left'),
+            panelRight: document.getElementById('panel-right'),
+            stageCenter: document.getElementById('stage-center')
         };
 
-        // --- Three.js Setup ---
+        // ---------- THREE.JS SETUP ----------
         let scene, camera, renderer, controls;
         let ambientLight, directionalLight;
         let weaveGroup, skeletonGroup, activeStrip;
         const BAMBOO_COLOR = 0xd4b886;
         const BAMBOO_EDGE = 0xb49866;
-        const WEAVE_SIZE = 10; // World units for the mat
+        const WEAVE_SIZE = 10;
 
+        // Enhanced bamboo materials with higher resolution textures
         function getBambooMaterial(isVertical) {
             const canvas = document.createElement('canvas');
-            canvas.width = 512; canvas.height = 512;
+            canvas.width = 1024;
+            canvas.height = 1024;
             const ctx = canvas.getContext('2d');
-            
-            // Base color
-            ctx.fillStyle = '#dcb98a';
-            ctx.fillRect(0,0,512,512);
-            
-            // Draw grain lines
+
+            // Base gradient
+            const baseGrad = ctx.createLinearGradient(
+                isVertical ? 0 : 0,
+                isVertical ? 0 : 0,
+                isVertical ? 1024 : 0,
+                isVertical ? 0 : 1024
+            );
+            baseGrad.addColorStop(0, '#e2c79a');
+            baseGrad.addColorStop(0.5, '#dcb98a');
+            baseGrad.addColorStop(1, '#d1ae7a');
+            ctx.fillStyle = baseGrad;
+            ctx.fillRect(0, 0, 1024, 1024);
+
+            // Grain lines (finer, more detailed)
             ctx.strokeStyle = '#c49a62';
-            ctx.globalAlpha = 0.5;
-            for(let i=0; i<300; i++) {
+            ctx.globalAlpha = 0.35;
+            for (let i = 0; i < 600; i++) {
                 ctx.beginPath();
-                const pos = Math.random() * 512;
-                ctx.lineWidth = Math.random() * 2 + 0.5;
-                if(isVertical) {
-                    ctx.moveTo(pos, 0); ctx.lineTo(pos, 512);
+                const pos = Math.random() * 1024;
+                ctx.lineWidth = Math.random() * 2.5 + 0.3;
+                if (isVertical) {
+                    ctx.moveTo(pos, 0);
+                    ctx.lineTo(pos + (Math.random() - 0.5) * 6, 1024);
                 } else {
-                    ctx.moveTo(0, pos); ctx.lineTo(512, pos);
+                    ctx.moveTo(0, pos);
+                    ctx.lineTo(1024, pos + (Math.random() - 0.5) * 6);
                 }
                 ctx.stroke();
             }
-            
-            // Add subtle shading at the edges for a slightly rounded look
-            const gradient = isVertical 
-                ? ctx.createLinearGradient(0, 0, 512, 0)
-                : ctx.createLinearGradient(0, 0, 0, 512);
-            gradient.addColorStop(0, 'rgba(0,0,0,0.2)');
-            gradient.addColorStop(0.15, 'rgba(0,0,0,0)');
-            gradient.addColorStop(0.85, 'rgba(0,0,0,0)');
-            gradient.addColorStop(1, 'rgba(0,0,0,0.2)');
-            ctx.fillStyle = gradient;
+
+            // Subtle cross-grain
+            ctx.strokeStyle = '#b8946a';
+            ctx.globalAlpha = 0.15;
+            for (let i = 0; i < 200; i++) {
+                ctx.beginPath();
+                const pos = Math.random() * 1024;
+                ctx.lineWidth = Math.random() * 1.5 + 0.2;
+                if (isVertical) {
+                    ctx.moveTo(0, pos);
+                    ctx.lineTo(1024, pos);
+                } else {
+                    ctx.moveTo(pos, 0);
+                    ctx.lineTo(pos, 1024);
+                }
+                ctx.stroke();
+            }
+
+            // Edge shading for rounded look
+            const shadeGrad = isVertical
+                ? ctx.createLinearGradient(0, 0, 1024, 0)
+                : ctx.createLinearGradient(0, 0, 0, 1024);
+            shadeGrad.addColorStop(0, 'rgba(0,0,0,0.25)');
+            shadeGrad.addColorStop(0.12, 'rgba(0,0,0,0)');
+            shadeGrad.addColorStop(0.88, 'rgba(0,0,0,0)');
+            shadeGrad.addColorStop(1, 'rgba(0,0,0,0.25)');
+            ctx.fillStyle = shadeGrad;
             ctx.globalAlpha = 1.0;
-            ctx.fillRect(0,0,512,512);
+            ctx.fillRect(0, 0, 1024, 1024);
+
+            // Highlight line for sheen
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            if (isVertical) {
+                ctx.moveTo(380, 0);
+                ctx.lineTo(380, 1024);
+            } else {
+                ctx.moveTo(0, 380);
+                ctx.lineTo(1024, 380);
+            }
+            ctx.stroke();
 
             const tex = new THREE.CanvasTexture(canvas);
-            return new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, color: 0xffffff });
+            tex.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 1;
+            return new THREE.MeshStandardMaterial({
+                map: tex,
+                roughness: 0.85,
+                metalness: 0.02,
+                color: 0xffffff
+            });
         }
 
-        const bambooMatVert = getBambooMaterial(true);
-        const bambooMatHoriz = getBambooMaterial(false);
+        let bambooMatVert, bambooMatHoriz;
 
         function getRawBambooMaterial() {
             const canvas = document.createElement('canvas');
-            canvas.width = 1024; canvas.height = 128;
+            canvas.width = 2048;
+            canvas.height = 256;
             const ctx = canvas.getContext('2d');
 
-            // Base color (light dried bamboo)
-            ctx.fillStyle = '#e8d5a1';
-            ctx.fillRect(0,0,1024,128);
+            // Base
+            const grad = ctx.createLinearGradient(0, 0, 0, 256);
+            grad.addColorStop(0, '#e8d5a1');
+            grad.addColorStop(0.5, '#e0c98e');
+            grad.addColorStop(1, '#d4b87a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 2048, 256);
 
             // Grain
             ctx.strokeStyle = '#c4aa70';
-            ctx.globalAlpha = 0.4;
-            for(let i=0; i<100; i++) {
+            ctx.globalAlpha = 0.35;
+            for (let i = 0; i < 200; i++) {
                 ctx.beginPath();
-                const y = Math.random() * 128;
-                ctx.lineWidth = Math.random() * 2;
+                const y = Math.random() * 256;
+                ctx.lineWidth = Math.random() * 2.5 + 0.3;
                 ctx.moveTo(0, y);
-                ctx.lineTo(1024, y);
+                ctx.lineTo(2048, y + (Math.random() - 0.5) * 8);
                 ctx.stroke();
             }
             ctx.globalAlpha = 1.0;
 
-            // Dark bindings/nodes (like the Dala rim in the reference image)
-            const numBindings = 16;
-            const bindWidth = 24;
-            for(let i=0; i<=numBindings; i++) {
-                const x = (i / numBindings) * 1024;
-                // Draw dark brown binding
+            // Bindings (nodes)
+            const numBindings = 24;
+            const bindWidth = 30;
+            for (let i = 0; i <= numBindings; i++) {
+                const x = (i / numBindings) * 2048;
+                // Dark brown binding
                 ctx.fillStyle = '#8b4513';
-                ctx.fillRect(x - bindWidth/2, 0, bindWidth, 128);
-                // Binding inner texture
+                ctx.fillRect(x - bindWidth / 2, 0, bindWidth, 256);
+                // Binding texture
                 ctx.strokeStyle = '#5c2e0b';
-                for(let j=0; j<5; j++) {
+                ctx.lineWidth = 1.5;
+                for (let j = 0; j < 8; j++) {
                     ctx.beginPath();
-                    ctx.moveTo(x - bindWidth/2 + j*(bindWidth/5), 0);
-                    ctx.lineTo(x - bindWidth/2 + j*(bindWidth/5), 128);
+                    ctx.moveTo(x - bindWidth / 2 + j * (bindWidth / 8), 0);
+                    ctx.lineTo(x - bindWidth / 2 + j * (bindWidth / 8), 256);
                     ctx.stroke();
                 }
+                // Highlight
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x - bindWidth / 2 + 4, 0);
+                ctx.lineTo(x - bindWidth / 2 + 4, 256);
+                ctx.stroke();
             }
 
             const tex = new THREE.CanvasTexture(canvas);
             tex.wrapS = THREE.RepeatWrapping;
             tex.wrapT = THREE.RepeatWrapping;
-            tex.repeat.set(4, 1); // Repeat along the tube
-            return new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8 });
+            tex.repeat.set(6, 1);
+            tex.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 1;
+            return new THREE.MeshStandardMaterial({
+                map: tex,
+                roughness: 0.8,
+                metalness: 0.02
+            });
         }
-        
-        const rawBambooMat = getRawBambooMaterial();
 
+        let rawBambooMat;
+
+        // ---------- INIT 3D ----------
         function init3D() {
+            // Create materials after renderer exists (for anisotropy)
             scene = new THREE.Scene();
-            // Match the Tailwind gray-100 background
-            scene.background = new THREE.Color(0xf3f4f6); 
+            scene.background = new THREE.Color(0xf5f3ef);
+            scene.fog = new THREE.Fog(0xf5f3ef, 18, 35);
 
-            camera = new THREE.PerspectiveCamera(45, ui.canvas.clientWidth / ui.canvas.clientHeight, 0.1, 100);
+            const wrapper = ui.canvasWrapper;
+            const width = wrapper.clientWidth || 400;
+            const height = wrapper.clientHeight || 400;
+
+            camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
             camera.position.set(0, 0, 15);
 
-            renderer = new THREE.WebGLRenderer({ canvas: ui.canvas, antialias: true });
-            renderer.setSize(ui.canvas.clientWidth, ui.canvas.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer = new THREE.WebGLRenderer({
+                canvas: ui.canvas,
+                antialias: true,
+                alpha: false,
+                powerPreference: 'high-performance'
+            });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.5));
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.1;
+
+            // Materials (with renderer for anisotropy)
+            bambooMatVert = getBambooMaterial(true);
+            bambooMatHoriz = getBambooMaterial(false);
+            rawBambooMat = getRawBambooMaterial();
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
+            controls.dampingFactor = 0.06;
+            controls.rotateSpeed = 0.8;
+            controls.zoomSpeed = 0.7;
+            controls.panSpeed = 0.5;
+            controls.minDistance = 5;
+            controls.maxDistance = 30;
+            controls.enablePan = true;
+            controls.autoRotate = false;
 
-            // Lighting
-            ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            // Lighting — more sophisticated
+            ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
             scene.add(ambientLight);
 
-            directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-            directionalLight.position.set(5, 10, 7);
+            directionalLight = new THREE.DirectionalLight(0xfff8e7, 0.85);
+            directionalLight.position.set(8, 14, 10);
             directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 1;
+            directionalLight.shadow.camera.far = 40;
+            directionalLight.shadow.camera.left = -15;
+            directionalLight.shadow.camera.right = 15;
+            directionalLight.shadow.camera.top = 15;
+            directionalLight.shadow.camera.bottom = -15;
+            directionalLight.shadow.bias = -0.0005;
             scene.add(directionalLight);
+
+            // Secondary fill light
+            const fillLight = new THREE.DirectionalLight(0xe8f0ff, 0.3);
+            fillLight.position.set(-8, 4, -6);
+            scene.add(fillLight);
+
+            // Rim light
+            const rimLight = new THREE.DirectionalLight(0xffeedd, 0.25);
+            rimLight.position.set(0, -5, -10);
+            scene.add(rimLight);
 
             // Containers
             weaveGroup = new THREE.Group();
@@ -433,37 +1387,44 @@
             scene.add(weaveGroup);
             scene.add(skeletonGroup);
 
+            // Resize handling
             window.addEventListener('resize', onWindowResize, false);
+            if (window.ResizeObserver) {
+                const ro = new ResizeObserver(() => onWindowResize());
+                ro.observe(ui.canvasWrapper);
+            }
+
             animate3D();
-            
-            // Add initial 3D bamboo stalk for prep stage
             buildPrepScene();
+
+            // Preload cultural content
+            ui.cultureContent.innerHTML = cultureData.prep;
         }
 
         function onWindowResize() {
-            const width = ui.canvas.parentElement.clientWidth;
-            const height = ui.canvas.parentElement.clientHeight;
+            const wrapper = ui.canvasWrapper;
+            const width = wrapper.clientWidth || 400;
+            const height = wrapper.clientHeight || 400;
+            if (width === 0 || height === 0) return;
+
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
             renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.5));
             updateDragHint();
         }
 
-        // Handle switching between View (Orbit) and Craft (Locked) modes
+        // ---------- MODE SWITCHING ----------
         function setMode(newMode) {
             state.mode = newMode;
-            
-            // Update UI buttons
+
             if (newMode === 'craft') {
-                ui.btnModeCraft.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-green-700 text-white transition-colors";
-                ui.btnModeView.className = "px-4 py-1.5 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors";
-                
-                // Disable controls and snap camera to active craft view
-                if(controls) {
+                ui.btnModeCraft.className = 'active-craft';
+                ui.btnModeView.className = '';
+                if (controls) {
                     controls.enabled = false;
                     controls.autoRotate = false;
                 }
-                
                 if (state.stage === 'prep') {
                     camera.position.set(0, 0, 15);
                 } else if (state.stage === 'weave') {
@@ -471,109 +1432,123 @@
                 } else if (state.stage === 'shape_skeleton') {
                     camera.position.set(0, 8, 15);
                 }
-                controls.target.set(0,0,0);
+                controls.target.set(0, 0, 0);
                 updateDragHint();
-                
             } else {
-                ui.btnModeView.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white transition-colors";
-                ui.btnModeCraft.className = "px-4 py-1.5 rounded-full text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors";
-                
-                // Enable controls for free viewing
-                if(controls) {
+                ui.btnModeView.className = 'active-view';
+                ui.btnModeCraft.className = '';
+                if (controls) {
                     controls.enabled = true;
                 }
-                ui.dragHint.classList.add('hidden');
-                ui.dragHint.classList.remove('flex');
+                ui.dragHint.classList.remove('show');
             }
         }
 
+        // ---------- ANIMATION LOOP ----------
         function animate3D() {
             requestAnimationFrame(animate3D);
             controls.update();
             renderer.render(scene, camera);
         }
 
+        // ---------- SCENE CLEARING ----------
         function clearScene() {
-            while(weaveGroup.children.length > 0){ 
-                weaveGroup.remove(weaveGroup.children[0]); 
+            while (weaveGroup.children.length > 0) {
+                const child = weaveGroup.children[0];
+                if (child.geometry) child.geometry.dispose();
+                weaveGroup.remove(child);
             }
-            while(skeletonGroup.children.length > 0){ 
-                skeletonGroup.remove(skeletonGroup.children[0]); 
+            while (skeletonGroup.children.length > 0) {
+                const child = skeletonGroup.children[0];
+                if (child.geometry) child.geometry.dispose();
+                skeletonGroup.remove(child);
             }
         }
 
+        // ---------- PREP STAGE ----------
         let prepBambooMesh;
+
         function buildPrepScene() {
             clearScene();
-            ui.prepVisual.style.display = 'none'; // Hide HTML bamboo
-            
-            const geo = new THREE.CylinderGeometry(0.8, 0.8, 10, 32);
-            const mat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.7 });
+            ui.prepVisual.style.display = 'none';
+
+            const geo = new THREE.CylinderGeometry(0.8, 0.8, 10, 48, 8);
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0x16a34a,
+                roughness: 0.65,
+                metalness: 0.05,
+                emissive: new THREE.Color(0x052e16),
+                emissiveIntensity: 0.1
+            });
             prepBambooMesh = new THREE.Mesh(geo, mat);
             prepBambooMesh.castShadow = true;
+            prepBambooMesh.receiveShadow = true;
             weaveGroup.add(prepBambooMesh);
-            
-            setMode('craft'); // Initialize to craft mode with correct angle
+
+            // Add subtle rotation animation in view mode
+            setMode('craft');
         }
 
-        // Adjust bamboo visuals based on moisture
+        // ---------- MOISTURE SLIDER ----------
         ui.moistureSlider.addEventListener('input', (e) => {
             state.moisture = parseInt(e.target.value);
             ui.moistureVal.innerText = state.moisture + '%';
-            
-            // Visual feedback (Colors update on the 3D mesh!)
+
             if (state.moisture < 30) {
-                if(prepBambooMesh) prepBambooMesh.material.color.setHex(0xd4d4d8); // dry gray
-                ui.moistureFeedback.innerText = "Warning: Bamboo is drying out and becoming brittle.";
-                ui.moistureFeedback.className = "text-xs text-red-600 font-bold";
+                if (prepBambooMesh) prepBambooMesh.material.color.setHex(0xd4d4d8);
+                ui.moistureFeedback.innerText = '⚠️ Warning: Bamboo is drying out and becoming brittle.';
+                ui.moistureFeedback.className = 'text-xs text-red-600 font-bold leading-snug';
             } else if (state.moisture > 75) {
-                if(prepBambooMesh) prepBambooMesh.material.color.setHex(0x064e3b); // wet dark
-                ui.moistureFeedback.innerText = "Warning: Bamboo is too wet. Risk of mold.";
-                ui.moistureFeedback.className = "text-xs text-blue-600 font-bold";
+                if (prepBambooMesh) prepBambooMesh.material.color.setHex(0x064e3b);
+                ui.moistureFeedback.innerText = '💧 Warning: Bamboo is too wet. Risk of mold.';
+                ui.moistureFeedback.className = 'text-xs text-blue-600 font-bold leading-snug';
             } else {
-                if(prepBambooMesh) prepBambooMesh.material.color.setHex(0x16a34a); // optimal green
-                ui.moistureFeedback.innerText = "Optimal moisture! Flexible and strong.";
-                ui.moistureFeedback.className = "text-xs text-green-600 font-bold";
+                if (prepBambooMesh) prepBambooMesh.material.color.setHex(0x16a34a);
+                ui.moistureFeedback.innerText = '✅ Optimal moisture! Flexible and strong.';
+                ui.moistureFeedback.className = 'text-xs text-green-600 font-bold leading-snug';
             }
         });
 
+        // ---------- TOAST ----------
         function showToast(msg) {
             const toast = document.getElementById('toast');
             toast.innerText = msg;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
         }
 
+        // ---------- ZEN MODE ----------
         function toggleZenMode() {
             ui.body.classList.toggle('zen-mode');
-            setTimeout(onWindowResize, 350); 
+            setTimeout(onWindowResize, 400);
         }
 
+        // ---------- SPLIT BAMBOO ----------
         function splitBamboo() {
             if (state.moisture < 30) {
-                showToast("CRACK! The bamboo was too dry and splintered. Adjust moisture.");
+                showToast('💥 CRACK! The bamboo was too dry and splintered. Adjust moisture.');
                 return;
             }
             if (state.moisture > 75) {
-                showToast("SQUISH! Too wet. The splits are weak and fibrous. Adjust moisture.");
+                showToast('💦 SQUISH! Too wet. The splits are weak and fibrous. Adjust moisture.');
                 return;
             }
 
-            showToast("Success! Beautiful, flexible Kamchis created.");
-            
-            // Animation for splitting
+            showToast('✨ Success! Beautiful, flexible Kamchis created.');
+
             let scale = 1;
             const splitAnim = setInterval(() => {
-                scale -= 0.1;
-                if(prepBambooMesh) {
+                scale -= 0.08;
+                if (prepBambooMesh) {
                     prepBambooMesh.scale.x = Math.max(0.1, scale);
                     prepBambooMesh.scale.z = Math.max(0.1, scale);
                 }
-                if(scale <= 0.1) {
+                if (scale <= 0.1) {
                     clearInterval(splitAnim);
                     transitionToWeaving();
                 }
-            }, 50);
+            }, 40);
         }
 
         function transitionToWeaving() {
@@ -581,12 +1556,13 @@
             state.isReadyToWeave = true;
             ui.prepControls.classList.add('opacity-50', 'pointer-events-none');
             ui.weaveControls.classList.remove('opacity-50', 'pointer-events-none');
-            ui.instruction.innerText = "Click and drag from the left to slide a strip across! Rotate with mouse to see 3D depth.";
-            ui.stageBadge.innerText = "Stage: Weaving";
+            ui.instruction.innerText = '👆 Click and drag from the left to slide a strip across! Rotate with mouse to see 3D depth.';
+            ui.stageBadge.innerText = 'Stage: Weaving';
             ui.cultureContent.innerHTML = cultureData[state.pattern];
-            
+
             buildWeaveScene();
             updateDragHint();
+            showToast('🎋 Bamboo split! Now weave the Kamchis.');
         }
 
         function changePattern() {
@@ -595,41 +1571,41 @@
             state.kamchis = [];
             state.isDragging = false;
             buildWeaveScene();
-            ui.instruction.innerText = "Pattern changed. Drag across to start weaving.";
+            ui.instruction.innerText = 'Pattern changed. Drag across to start weaving.';
         }
 
+        // ---------- WEAVE CURVE HELPERS ----------
         function applyWeaveCurve(geometry, row, maxCols, pattern) {
             const posAttribute = geometry.attributes.position;
             const width = WEAVE_SIZE;
             const stripW = width / maxCols;
-            const DEPTH = 0.04; // How high/low the strip bends
-            
+            const DEPTH = 0.045;
+
             for (let i = 0; i < posAttribute.count; i++) {
                 const x = posAttribute.getX(i);
-                const colFloat = (x + width/2) / stripW;
+                const colFloat = (x + width / 2) / stripW;
                 const col = Math.floor(colFloat);
                 const t = colFloat - col;
-                
-                // Determine adjacent columns for smooth interpolation
+
                 let colA, colB, blend;
                 if (t < 0.5) {
-                    colA = col - 1; colB = col;
+                    colA = col - 1;
+                    colB = col;
                     blend = t + 0.5;
                 } else {
-                    colA = col; colB = col + 1;
+                    colA = col;
+                    colB = col + 1;
                     blend = t - 0.5;
                 }
-                
+
                 const getZ = (c) => {
-                    if (c < 0 || c >= maxCols) return 0; // edges taper flat
+                    if (c < 0 || c >= maxCols) return 0;
                     return checkOverUnder(row, c, pattern) ? DEPTH : -DEPTH;
                 };
-                
-                // Smoothstep interpolation for natural curving
-                const smoothBlend = blend * blend * (3 - 2 * blend); 
+
+                const smoothBlend = blend * blend * (3 - 2 * blend);
                 const z = getZ(colA) + (getZ(colB) - getZ(colA)) * smoothBlend;
-                
-                // Apply the curve offset to the vertex
+
                 posAttribute.setZ(i, posAttribute.getZ(i) + z);
             }
             geometry.computeVertexNormals();
@@ -639,87 +1615,88 @@
             const posAttribute = geometry.attributes.position;
             const height = WEAVE_SIZE;
             const stripH = height / maxRows;
-            const DEPTH = 0.04; 
-            
+            const DEPTH = 0.045;
+
             for (let i = 0; i < posAttribute.count; i++) {
                 const y = posAttribute.getY(i);
-                const rowFloat = (height/2 - y) / stripH;
+                const rowFloat = (height / 2 - y) / stripH;
                 const row = Math.floor(rowFloat);
                 const t = rowFloat - row;
-                
+
                 let rowA, rowB, blend;
                 if (t < 0.5) {
-                    rowA = row - 1; rowB = row;
+                    rowA = row - 1;
+                    rowB = row;
                     blend = t + 0.5;
                 } else {
-                    rowA = row; rowB = row + 1;
+                    rowA = row;
+                    rowB = row + 1;
                     blend = t - 0.5;
                 }
-                
+
                 const getZ = (r) => {
                     if (r < 0 || r >= maxRows) return 0;
-                    // Vertical strips dip the opposite direction of horizontal strips
-                    return checkOverUnder(r, col, pattern) ? -DEPTH : DEPTH; 
+                    return checkOverUnder(r, col, pattern) ? -DEPTH : DEPTH;
                 };
-                
-                const smoothBlend = blend * blend * (3 - 2 * blend); 
+
+                const smoothBlend = blend * blend * (3 - 2 * blend);
                 const z = getZ(rowA) + (getZ(rowB) - getZ(rowA)) * smoothBlend;
-                
+
                 posAttribute.setZ(i, posAttribute.getZ(i) + z);
             }
             geometry.computeVertexNormals();
         }
 
+        // ---------- WEAVE SCENE BUILD ----------
         function buildWeaveScene() {
             clearScene();
-            camera.position.set(0, -5, 12); // Slightly tilted angle to see depth
-            controls.target.set(0,0,0);
-            
+            camera.position.set(0, -5, 12);
+            controls.target.set(0, 0, 0);
+
             const stripWidth = WEAVE_SIZE / state.maxCols;
             const stripHeight = WEAVE_SIZE / state.maxRows;
-            
-            // 1. Create Vertical Warps with smooth curves
+
+            // Vertical warps
             for (let col = 0; col < state.maxCols; col++) {
-                // High Y-segmentation (state.maxRows * 4) allows the geometry to physically bend
-                const geo = new THREE.BoxGeometry(stripWidth * 0.98, WEAVE_SIZE, 0.06, 1, state.maxRows * 4, 1);
+                const geo = new THREE.BoxGeometry(stripWidth * 0.98, WEAVE_SIZE, 0.06, 1, state.maxRows * 6, 1);
                 applyVerticalWeaveCurve(geo, col, state.maxRows, state.pattern);
-                
+
                 const mesh = new THREE.Mesh(geo, bambooMatVert);
-                mesh.position.set(-WEAVE_SIZE/2 + (col + 0.5) * stripWidth, 0, 0);
+                mesh.position.set(-WEAVE_SIZE / 2 + (col + 0.5) * stripWidth, 0, 0);
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
                 weaveGroup.add(mesh);
             }
 
-            // 2. Re-create already woven horizontal rows
+            // Re-create woven rows
             for (let row = 0; row < state.kamchis.length; row++) {
                 addWovenRow3D(row);
             }
-            
-            // 3. Create active drag strip (hidden initially, flat block)
+
+            // Active drag strip
             const activeGeo = new THREE.BoxGeometry(1, stripHeight * 0.98, 0.06);
             activeStrip = new THREE.Mesh(activeGeo, bambooMatHoriz);
-            activeStrip.position.z = 0.4; // Float safely above the curves
+            activeStrip.position.z = 0.45;
             activeStrip.visible = false;
+            activeStrip.castShadow = true;
             weaveGroup.add(activeStrip);
         }
 
         function addWovenRow3D(row) {
             const stripHeight = WEAVE_SIZE / state.maxRows;
-            const yPos = WEAVE_SIZE/2 - (row + 0.5) * stripHeight;
-            
-            // Create a single continuous horizontal strip per row, highly segmented on X
-            const geo = new THREE.BoxGeometry(WEAVE_SIZE, stripHeight * 0.98, 0.06, state.maxCols * 4, 1, 1);
+            const yPos = WEAVE_SIZE / 2 - (row + 0.5) * stripHeight;
+
+            const geo = new THREE.BoxGeometry(WEAVE_SIZE, stripHeight * 0.98, 0.06, state.maxCols * 6, 1, 1);
             applyWeaveCurve(geo, row, state.maxCols, state.pattern);
-            
+
             const mesh = new THREE.Mesh(geo, bambooMatHoriz);
-            mesh.position.set(0, yPos, 0); // Position at center, curve extends outward
+            mesh.position.set(0, yPos, 0);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             weaveGroup.add(mesh);
         }
 
-        // Mathematical definition of patterns
+        // ---------- PATTERN LOGIC ----------
         function checkOverUnder(row, col, pattern) {
             if (pattern === 'checkerboard') return (row + col) % 2 === 0;
             if (pattern === 'twill') {
@@ -730,10 +1707,10 @@
             if (pattern === 'twill31') {
                 const offset = row % 4;
                 const pos = (col + offset) % 4;
-                return pos !== 3; 
+                return pos !== 3;
             }
             if (pattern === 'herringbone') {
-                const dir = col < 6 ? 1 : -1; 
+                const dir = col < 6 ? 1 : -1;
                 const offset = dir === 1 ? row % 4 : (4 - (row % 4)) % 4;
                 const pos = (col + offset) % 4;
                 return (pos === 0 || pos === 1);
@@ -741,38 +1718,38 @@
             return true;
         }
 
+        // ---------- DRAG HINT ----------
         function updateDragHint() {
             if (state.stage !== 'weave' || state.isDragging || state.kamchis.length >= state.maxRows || state.mode !== 'craft') {
-                ui.dragHint.classList.add('hidden');
-                ui.dragHint.classList.remove('flex');
+                ui.dragHint.classList.remove('show');
                 return;
             }
-            
+
             const row = state.kamchis.length;
-            // Map 3D row to 2D screen percentage for the UI hint
             const topPercent = (row / state.maxRows) * 100;
             const heightPercent = (1 / state.maxRows) * 100;
-            
+
             ui.dragHint.style.top = `${topPercent}%`;
             ui.dragHint.style.height = `${heightPercent}%`;
-            ui.dragHint.classList.remove('hidden');
-            ui.dragHint.classList.add('flex');
+            ui.dragHint.classList.add('show');
         }
 
+        // ---------- DRAG INTERACTION ----------
         function getEventXProgress(e) {
             const rect = ui.canvas.getBoundingClientRect();
             let clientX = e.clientX;
             if (e.touches && e.touches.length > 0) clientX = e.touches[0].clientX;
+            if (e.changedTouches && e.changedTouches.length > 0) clientX = e.changedTouches[0].clientX;
             const x = clientX - rect.left;
             return Math.max(0, Math.min(1, x / rect.width));
         }
 
         function startDrag(e) {
             if (state.stage !== 'weave' || state.kamchis.length >= state.maxRows || state.mode !== 'craft') return;
-            // Only start drag if clicking near the left edge
             const progress = getEventXProgress(e);
-            if(progress > 0.3) return; 
-            
+            if (progress > 0.3) return;
+
+            e.preventDefault();
             state.isDragging = true;
             state.dragProgress = progress;
             updateActiveStrip();
@@ -781,187 +1758,194 @@
 
         function moveDrag(e) {
             if (!state.isDragging) return;
+            e.preventDefault();
             state.dragProgress = getEventXProgress(e);
             updateActiveStrip();
         }
 
         function endDrag(e) {
             if (!state.isDragging) return;
+            e.preventDefault();
             state.isDragging = false;
-            
+
             if (state.dragProgress > 0.8) {
-                // Successfully slid across! Add the 3D row.
                 addWovenRow3D(state.kamchis.length);
-                state.kamchis.push(true); 
-                activeStrip.visible = false;
-                
+                state.kamchis.push(true);
+                if (activeStrip) activeStrip.visible = false;
+
                 let remaining = state.maxRows - state.kamchis.length;
                 if (remaining > 0) {
-                    ui.instruction.innerText = `Great slide! Drag the next strip across. ${remaining} rows left.`;
+                    ui.instruction.innerText = `Great slide! Drag the next strip across. ${remaining} row${remaining > 1 ? 's' : ''} left.`;
                 } else {
                     finishSimulation();
                 }
             } else {
-                activeStrip.visible = false;
-                showToast("Slide the strip all the way across to weave it!");
+                if (activeStrip) activeStrip.visible = false;
+                showToast('👉 Slide the strip all the way across to weave it!');
             }
             updateDragHint();
         }
 
         function updateActiveStrip() {
-            if(!activeStrip) return;
+            if (!activeStrip) return;
             const stripHeight = WEAVE_SIZE / state.maxRows;
             const row = state.kamchis.length;
-            const yPos = WEAVE_SIZE/2 - (row + 0.5) * stripHeight;
-            
+            const yPos = WEAVE_SIZE / 2 - (row + 0.5) * stripHeight;
+
             const currentWidth = state.dragProgress * WEAVE_SIZE;
-            
+
             activeStrip.visible = true;
             activeStrip.scale.x = Math.max(0.01, currentWidth);
-            // Position it so it grows from the left edge
-            activeStrip.position.set(-WEAVE_SIZE/2 + currentWidth/2, yPos, 0.3);
+            activeStrip.position.set(-WEAVE_SIZE / 2 + currentWidth / 2, yPos, 0.35);
         }
 
+        // Touch and mouse events
         ui.canvas.addEventListener('mousedown', startDrag);
         window.addEventListener('mousemove', moveDrag);
         window.addEventListener('mouseup', endDrag);
-        ui.canvas.addEventListener('touchstart', startDrag, { passive: true });
-        window.addEventListener('touchmove', moveDrag, { passive: true });
+        ui.canvas.addEventListener('touchstart', startDrag, { passive: false });
+        window.addEventListener('touchmove', moveDrag, { passive: false });
         window.addEventListener('touchend', endDrag);
+        window.addEventListener('touchcancel', endDrag);
 
+        // ---------- FINISH WEAVING ----------
         function finishSimulation() {
             state.stage = 'shape_skeleton';
-            ui.stageBadge.innerText = "Stage: Shaping";
+            ui.stageBadge.innerText = 'Stage: Shaping';
             ui.weaveControls.classList.add('opacity-50', 'pointer-events-none');
             ui.shapeControls.classList.remove('hidden');
-            setTimeout(() => { ui.shapeControls.classList.remove('opacity-50', 'pointer-events-none'); }, 50);
+            setTimeout(() => {
+                ui.shapeControls.classList.remove('opacity-50', 'pointer-events-none');
+            }, 60);
 
-            ui.instruction.innerHTML = `<span class="text-green-700 font-bold">Incredible! You've woven a 3D pattern.</span>`;
-            ui.cultureContent.innerHTML = `<h3 class="font-bold text-green-900 text-xl mb-2">Mat Completed</h3><p>The flat woven pattern is ready. Select an object type to build its structural frame, and then bind the mat to it.</p>`;
-            showToast("Basket weaving complete! Proceed to shaping.");
-            
-            // Auto zoom out a bit to see the whole mat
+            ui.instruction.innerHTML = `<span class="text-green-700 font-bold">🎉 Incredible! You've woven a 3D pattern.</span>`;
+            ui.cultureContent.innerHTML = `
+                <h3 class="font-bold text-green-900 text-xl mb-2">Mat Completed</h3>
+                <p class="text-sm leading-relaxed">The flat woven pattern is ready. Select an object type to build its structural frame, and then bind the mat to it.</p>
+                <div class="bg-green-50/60 rounded-xl p-3 border border-green-200/50 mt-2">
+                    <p class="text-xs text-green-800 flex items-start gap-2">
+                        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Weaving complete! Proceed to shaping.</span>
+                    </p>
+                </div>
+            `;
+            showToast('🧺 Basket weaving complete! Proceed to shaping.');
+
             camera.position.set(0, 0, 16);
-            controls.target.set(0,0,0);
+            controls.target.set(0, 0, 0);
         }
 
+        // ---------- SKELETON BENDING ----------
         function prepareSkeleton() {
             state.stage = 'shape_skeleton';
             state.skeletonProgress = 0;
             state.selectedShape = document.getElementById('shape-select').value;
-            setMode('craft'); // Ensure locked angle for bending
-            
+            setMode('craft');
+
             document.getElementById('btn-prepare-skeleton').classList.add('hidden');
             document.getElementById('skeleton-prep-ui').classList.remove('hidden');
-            document.getElementById('shape-select').disabled = true; 
-            
-            ui.instruction.innerHTML = `<span class="text-amber-800 font-bold">Drag slider to bend the straight bamboo in 3D.</span>`;
-            ui.cultureContent.innerHTML = `<h3 class="font-bold text-amber-900 text-xl mb-2">The Framework</h3><p>Before binding the woven mat, artisans use heat and force to bend thick bamboo poles, creating a strong, rigid skeleton for the artifact.</p>`;
-            
-            // Hide weave, show skeleton
+            document.getElementById('shape-select').disabled = true;
+
+            ui.instruction.innerHTML = `<span class="text-amber-800 font-bold">Bend the straight bamboo to form the skeleton.</span>`;
+            ui.cultureContent.innerHTML = `
+                <h3 class="font-bold text-amber-900 text-xl mb-2">The Framework</h3>
+                <p class="text-sm leading-relaxed">Before binding the woven mat, artisans use heat and force to bend thick bamboo poles, creating a strong, rigid skeleton for the artifact.</p>
+                <img src="https://images.unsplash.com/photo-1594489428504-5c0c480a15fa?w=400&h=250&fit=crop&crop=entropy&auto=format" 
+                     alt="Bamboo framework" 
+                     class="culture-image my-3"
+                     loading="lazy"
+                     onerror="this.style.display='none'">
+            `;
+
             weaveGroup.visible = false;
             skeletonGroup.visible = true;
-            
-            camera.position.set(0, 8, 15); // Look down angle
+
+            camera.position.set(0, 8, 15);
             renderSkeleton3D(0);
         }
 
-        // Custom 3D curves that bend based on progress
+        // Custom 3D curves for skeleton
         class BendCurve extends THREE.Curve {
-            constructor(progress, type, index=0, total=4, shapeType='tokri') { 
-                super(); 
-                this.p = progress; 
-                this.t = type; 
-                this.i = index; 
-                this.total = total; 
+            constructor(progress, type, index = 0, total = 4, shapeType = 'tokri') {
+                super();
+                this.p = progress;
+                this.t = type;
+                this.i = index;
+                this.total = total;
                 this.shape = shapeType;
             }
             getPoint(t, optionalTarget = new THREE.Vector3()) {
-                let x=0, y=0, z=0;
-                let L = 10; // Default raw pole length
-                
+                let x = 0, y = 0, z = 0;
+                let L = 10;
+
                 if (this.t.startsWith('ring')) {
-                    // 1. MAIN BINDING RINGS
                     let R = 3.5;
                     if (this.shape === 'kothi') R = 3;
                     if (this.shape === 'dala') R = 5;
                     if (this.t === 'ring_mid') R = 2.0;
 
-                    L = R * Math.PI * 2; // Length needed for a full circle
+                    L = R * Math.PI * 2;
                     const theta = this.p * Math.PI * 2;
-                    
+
                     if (theta < 0.001) {
-                        // Laying flat before bending
                         x = (t - 0.5) * L;
-                        y = (1 - this.p) * (this.i * 2) + this.p * this.i; // Spread out initially
+                        y = (1 - this.p) * (this.i * 2) + this.p * this.i;
                         z = 0;
                     } else {
-                        // Radius of curvature ensures real physical bending without crossing
                         const r_c = L / theta;
                         const alpha = (t - 0.5) * theta;
-                        
+
                         x = r_c * Math.sin(alpha);
-                        // Shift Z so it curls around the center gracefully
-                        z = r_c * Math.cos(alpha) - r_c * (1 - this.p); 
+                        z = r_c * Math.cos(alpha) - r_c * (1 - this.p);
                         y = (1 - this.p) * (this.i * 2) + this.p * this.i;
                     }
-                } 
-                else if (this.t === 'rib') {
-                    // 2. TOKRI SUPPORTIVE STAR LATTICE (Radial/Star Base Ribs)
+                } else if (this.t === 'rib') {
                     L = 11;
                     const R = 3.5;
-                    const rotAngle = (this.i / this.total) * Math.PI; // Star rotation angle for this stick
-                    
-                    // 1. Unbent flat state: straight line centered exactly at origin (0,0,0)
+                    const rotAngle = (this.i / this.total) * Math.PI;
+
                     const flatX = (t - 0.5) * L;
                     const startX = flatX * Math.cos(rotAngle);
                     const startY = 0;
-                    const startZ = flatX * Math.sin(rotAngle); 
-                    
-                    // 2. Bent state: Final bowl/U-shape curve (before rotation)
-                    const curveAngle = -Math.PI/2 + t * Math.PI;
+                    const startZ = flatX * Math.sin(rotAngle);
+
+                    const curveAngle = -Math.PI / 2 + t * Math.PI;
                     const bentX = Math.sin(curveAngle) * R;
-                    const bentY = -Math.cos(curveAngle) * R + R; // Bottom touches ground
-                    
-                    // Rotate the bent curve to match the star pattern
+                    const bentY = -Math.cos(curveAngle) * R + R;
+
                     const endX = bentX * Math.cos(rotAngle);
                     const endY = bentY;
                     const endZ = bentX * Math.sin(rotAngle);
-                    
-                    // 3. Interpolate between flat star layout and standing basket frame
+
                     x = startX + (endX - startX) * this.p;
                     y = startY + (endY - startY) * this.p;
                     z = startZ + (endZ - startZ) * this.p;
-                } 
-                else if (this.t === 'vertical_strut') {
-                    // 3. KOTHI SUPPORTIVE VERTICAL STRUTS
+                } else if (this.t === 'vertical_strut') {
                     L = 8;
                     const startX = (t - 0.5) * L;
                     const startY = 0;
-                    const startZ = (this.i - this.total/2) * 1.5; 
-                    
-                    // Stand upright in a circular perimeter
+                    const startZ = (this.i - this.total / 2) * 1.5;
+
                     const R = 3;
                     const rotAngle = (this.i / this.total) * Math.PI * 2;
                     const endX = Math.cos(rotAngle) * R;
                     const endZ = Math.sin(rotAngle) * R;
                     const endY = t * L;
-                    
+
                     x = startX + (endX - startX) * this.p;
                     y = startY + (endY - startY) * this.p;
                     z = startZ + (endZ - startZ) * this.p;
-                } 
-                else if (this.t.startsWith('grid')) {
-                    // 4. DALA SUPPORTIVE FLAT LATTICE (Tray Grid)
+                } else if (this.t.startsWith('grid')) {
                     L = 10;
                     const R = 5;
-                    // Spread grid lines across the tray radius
                     const offset = -R + (this.i / (this.total - 1)) * (R * 2);
-                    
+
                     const startX = (t - 0.5) * L;
                     const startY = 0;
-                    const startZ = (this.i - this.total/2) * 2.0 + (this.t === 'grid_v' ? 15 : 0);
-                    
+                    const startZ = (this.i - this.total / 2) * 2.0 + (this.t === 'grid_v' ? 15 : 0);
+
                     let endX, endZ;
                     if (this.t === 'grid_h') {
                         endX = (t - 0.5) * L;
@@ -970,14 +1954,13 @@
                         endZ = (t - 0.5) * L;
                         endX = offset;
                     }
-                    
-                    // Apply a slight dip in the middle to form a tray shape
-                    const distFromCenter = Math.sqrt(endX*endX + endZ*endZ);
+
+                    const distFromCenter = Math.sqrt(endX * endX + endZ * endZ);
                     let endY = 0;
                     if (distFromCenter < R) {
-                         endY = Math.pow(distFromCenter/R, 4) * 1.5; // Curving up at edges
+                        endY = Math.pow(distFromCenter / R, 4) * 1.5;
                     } else {
-                         endY = 1.5; // Match Rim height
+                        endY = 1.5;
                     }
 
                     x = startX + (endX - startX) * this.p;
@@ -990,39 +1973,61 @@
 
         function renderSkeleton3D(progress) {
             clearScene();
-            
+
             if (state.selectedShape === 'tokri') {
-                // 1. Thick Main Binding Rings (Top and Mid)
-                skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'ring', 3.5), 64, 0.25, 16, false), rawBambooMat));
-                skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'ring_mid', 1.5), 64, 0.18, 16, false), rawBambooMat));
-                
-                // 2. Thin Supportive Ribs (Forming the classic star base)
+                skeletonGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(new BendCurve(progress, 'ring', 3.5), 64, 0.25, 16, false),
+                    rawBambooMat
+                ));
+                skeletonGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(new BendCurve(progress, 'ring_mid', 1.5), 64, 0.18, 16, false),
+                    rawBambooMat
+                ));
+
                 const numRibs = 10;
-                for(let i=0; i<numRibs; i++) {
-                    skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'rib', i, numRibs), 64, 0.08, 8, false), rawBambooMat));
+                for (let i = 0; i < numRibs; i++) {
+                    skeletonGroup.add(new THREE.Mesh(
+                        new THREE.TubeGeometry(new BendCurve(progress, 'rib', i, numRibs), 64, 0.08, 8, false),
+                        rawBambooMat
+                    ));
                 }
-            } 
-            else if (state.selectedShape === 'kothi') {
-                // Thick Rings
-                skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'ring', 8, 1, 'kothi'), 64, 0.3, 16, false), rawBambooMat));
-                skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'ring', 4, 1, 'kothi'), 64, 0.3, 16, false), rawBambooMat));
-                skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'ring', 0, 1, 'kothi'), 64, 0.3, 16, false), rawBambooMat));
-                
-                // Vertical Supportive Struts
+            } else if (state.selectedShape === 'kothi') {
+                skeletonGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(new BendCurve(progress, 'ring', 8, 1, 'kothi'), 64, 0.3, 16, false),
+                    rawBambooMat
+                ));
+                skeletonGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(new BendCurve(progress, 'ring', 4, 1, 'kothi'), 64, 0.3, 16, false),
+                    rawBambooMat
+                ));
+                skeletonGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(new BendCurve(progress, 'ring', 0, 1, 'kothi'), 64, 0.3, 16, false),
+                    rawBambooMat
+                ));
+
                 const numStruts = 16;
-                for(let i=0; i<numStruts; i++) {
-                    skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'vertical_strut', i, numStruts), 64, 0.1, 8, false), rawBambooMat));
+                for (let i = 0; i < numStruts; i++) {
+                    skeletonGroup.add(new THREE.Mesh(
+                        new THREE.TubeGeometry(new BendCurve(progress, 'vertical_strut', i, numStruts), 64, 0.1, 8, false),
+                        rawBambooMat
+                    ));
                 }
-            } 
-            else if (state.selectedShape === 'dala') {
-                // Thick Rim Binding
-                skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'ring', 1.5, 1, 'dala'), 64, 0.35, 16, false), rawBambooMat));
-                
-                // Thin Grid Support Lattice (Warp and Weft bases)
+            } else if (state.selectedShape === 'dala') {
+                skeletonGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(new BendCurve(progress, 'ring', 1.5, 1, 'dala'), 64, 0.35, 16, false),
+                    rawBambooMat
+                ));
+
                 const gridLines = 8;
-                for(let i=0; i<gridLines; i++) {
-                    skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'grid_h', i, gridLines), 64, 0.08, 8, false), rawBambooMat));
-                    skeletonGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new BendCurve(progress, 'grid_v', i, gridLines), 64, 0.08, 8, false), rawBambooMat));
+                for (let i = 0; i < gridLines; i++) {
+                    skeletonGroup.add(new THREE.Mesh(
+                        new THREE.TubeGeometry(new BendCurve(progress, 'grid_h', i, gridLines), 64, 0.08, 8, false),
+                        rawBambooMat
+                    ));
+                    skeletonGroup.add(new THREE.Mesh(
+                        new THREE.TubeGeometry(new BendCurve(progress, 'grid_v', i, gridLines), 64, 0.08, 8, false),
+                        rawBambooMat
+                    ));
                 }
             }
         }
@@ -1030,172 +2035,271 @@
         document.getElementById('skeleton-slider').addEventListener('input', (e) => {
             state.skeletonProgress = parseInt(e.target.value) / 100;
             renderSkeleton3D(state.skeletonProgress);
-            
+
             if (state.skeletonProgress === 1) {
-                document.getElementById('skeleton-instruction').innerText = "Skeleton complete! Ready to bind the mat.";
+                document.getElementById('skeleton-instruction').innerText = '✅ Skeleton complete! Ready to bind the mat.';
                 document.getElementById('btn-wrap-mat').classList.remove('hidden');
                 ui.instruction.innerHTML = `<span class="text-green-700 font-bold">Perfect! Now wrap the woven mat around the 3D frame.</span>`;
             } else {
-                document.getElementById('skeleton-instruction').innerText = "Drag the slider to bend the straight bamboo into structural rings.";
+                document.getElementById('skeleton-instruction').innerText = 'Drag the slider to bend the straight bamboo into structural rings.';
                 document.getElementById('btn-wrap-mat').classList.add('hidden');
                 ui.instruction.innerHTML = `<span class="text-amber-800 font-bold">Bend the raw bamboo to form the skeleton.</span>`;
             }
         });
 
+        // ---------- FINAL OBJECT ----------
         function shapeObject() {
             state.stage = 'done';
             ui.shapeControls.classList.add('opacity-50', 'pointer-events-none');
-            ui.stageBadge.innerText = "Stage: Complete";
-            
-            ui.modeToggle.style.display = 'none'; // Hide toggle, force view mode
+            ui.stageBadge.innerText = 'Stage: Complete';
+
+            ui.modeToggle.style.display = 'none';
             setMode('view');
-            
+
             ui.cultureContent.innerHTML = cultureData.finished + cultureData[state.selectedShape];
-            ui.instruction.innerHTML = `<span class="text-amber-800 font-bold text-xl">Behold your 3D artifact! Rotate to inspect.</span>`;
-            showToast("Artifact shaped and bound successfully!");
-            
+            ui.instruction.innerHTML = `<span class="text-amber-800 font-bold text-xl">✨ Behold your 3D artifact! Rotate to inspect.</span>`;
+            showToast('🎉 Artifact shaped and bound successfully!');
+
             createFinalObject3D();
         }
 
-        // To map the weave onto the 3D shape, we quickly draw the weave to a hidden 2D canvas 
-        // to generate a Texture map.
+        // Generate weave texture for final object
         function generateWeaveTexture() {
             const canvas = document.createElement('canvas');
-            canvas.width = 512; canvas.height = 512;
+            canvas.width = 1024;
+            canvas.height = 1024;
             const ctx = canvas.getContext('2d');
-            
+
             const w = canvas.width, h = canvas.height;
             const cols = state.maxCols, rows = state.maxRows;
             const stripW = w / cols, stripH = h / rows;
-            
-            ctx.fillStyle = '#d4b886'; ctx.fillRect(0,0,w,h);
-            
-            for(let r=0; r<rows; r++) {
-                ctx.fillStyle = '#e6c896';
-                ctx.fillRect(0, r*stripH, w, stripH);
-                for(let c=0; c<cols; c++) {
-                    if(!checkOverUnder(r, c, state.pattern)) {
-                        ctx.fillStyle = '#d4b886';
-                        ctx.fillRect(c*stripW, r*stripH - 2, stripW, stripH + 4);
+
+            // Base
+            const baseGrad = ctx.createLinearGradient(0, 0, w, h);
+            baseGrad.addColorStop(0, '#d4b886');
+            baseGrad.addColorStop(0.5, '#e0c896');
+            baseGrad.addColorStop(1, '#d4b886');
+            ctx.fillStyle = baseGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            for (let r = 0; r < rows; r++) {
+                // Horizontal strip base
+                const rowGrad = ctx.createLinearGradient(0, r * stripH, 0, (r + 1) * stripH);
+                rowGrad.addColorStop(0, '#e6c896');
+                rowGrad.addColorStop(0.5, '#ddbe85');
+                rowGrad.addColorStop(1, '#e6c896');
+                ctx.fillStyle = rowGrad;
+                ctx.fillRect(0, r * stripH, w, stripH);
+
+                for (let c = 0; c < cols; c++) {
+                    if (!checkOverUnder(r, c, state.pattern)) {
+                        // Vertical strip visible (over-under inverted)
+                        const vertGrad = ctx.createLinearGradient(c * stripW, 0, (c + 1) * stripW, 0);
+                        vertGrad.addColorStop(0, '#d4b886');
+                        vertGrad.addColorStop(0.5, '#cdb078');
+                        vertGrad.addColorStop(1, '#d4b886');
+                        ctx.fillStyle = vertGrad;
+                        ctx.fillRect(c * stripW, r * stripH - 2, stripW, stripH + 4);
                     }
                 }
             }
-            
+
             // Add subtle shadow lines for depth
-            ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
             ctx.lineWidth = 2;
-            for(let i=0; i<=cols; i++) { ctx.beginPath(); ctx.moveTo(i*stripW, 0); ctx.lineTo(i*stripW, h); ctx.stroke(); }
-            for(let i=0; i<=rows; i++) { ctx.beginPath(); ctx.moveTo(0, i*stripH); ctx.lineTo(w, i*stripH); ctx.stroke(); }
-            
+            for (let i = 0; i <= cols; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * stripW, 0);
+                ctx.lineTo(i * stripW, h);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= rows; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, i * stripH);
+                ctx.lineTo(w, i * stripH);
+                ctx.stroke();
+            }
+
+            // Add grain texture overlay
+            ctx.strokeStyle = 'rgba(160,120,80,0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 2000; i++) {
+                ctx.beginPath();
+                const x = Math.random() * w;
+                const y = Math.random() * h;
+                const len = Math.random() * 20 + 5;
+                ctx.moveTo(x, y);
+                ctx.lineTo(x + len, y + (Math.random() - 0.5) * 4);
+                ctx.stroke();
+            }
+
             const tex = new THREE.CanvasTexture(canvas);
             tex.wrapS = THREE.RepeatWrapping;
             tex.wrapT = THREE.RepeatWrapping;
-            tex.repeat.set(2, 2);
+            tex.repeat.set(2.5, 2.5);
+            tex.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 1;
             return tex;
         }
 
         function createFinalObject3D() {
             clearScene();
             skeletonGroup.visible = false;
-            weaveGroup.visible = true; // reuse group
-            
+            weaveGroup.visible = true;
+
             const tex = generateWeaveTexture();
-            // Double-sided material so you can see inside the basket
-            const mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, side: THREE.DoubleSide });
-            
+            const mat = new THREE.MeshStandardMaterial({
+                map: tex,
+                roughness: 0.85,
+                metalness: 0.02,
+                side: THREE.DoubleSide,
+                color: 0xffffff
+            });
+
             const points = [];
             const type = state.selectedShape;
-            
-            // Define the 2D profile curve to revolve into a 3D shape
+
             if (type === 'tokri') {
-                for ( let i = 0; i <= 10; i ++ ) {
-                    const t = i / 10;
-                    // Bowl curve
-                    points.push( new THREE.Vector2( t * 4, (t*t) * 4 - 2 ) );
+                for (let i = 0; i <= 16; i++) {
+                    const t = i / 16;
+                    points.push(new THREE.Vector2(t * 4, (t * t) * 4 - 2));
                 }
             } else if (type === 'kothi') {
-                points.push( new THREE.Vector2( 0, -4 ) );
-                points.push( new THREE.Vector2( 3, -4 ) );
-                points.push( new THREE.Vector2( 3, 4 ) );
+                points.push(new THREE.Vector2(0, -4));
+                points.push(new THREE.Vector2(3, -4));
+                points.push(new THREE.Vector2(3, 4));
             } else if (type === 'dala') {
-                for ( let i = 0; i <= 10; i ++ ) {
-                    const t = i / 10;
-                    // Wide, mostly flat tray curving up at the edges
-                    points.push( new THREE.Vector2( t * 5.5, Math.pow(t, 6) * 1.5 ) );
+                for (let i = 0; i <= 16; i++) {
+                    const t = i / 16;
+                    points.push(new THREE.Vector2(t * 5.5, Math.pow(t, 6) * 1.5));
                 }
             }
-            
-            const geo = new THREE.LatheGeometry( points, 64 );
-            const mesh = new THREE.Mesh( geo, mat );
+
+            const geo = new THREE.LatheGeometry(points, 96);
+            const mesh = new THREE.Mesh(geo, mat);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             weaveGroup.add(mesh);
-            
-            // Add a thick top binding ring (Like the rim on the Dala)
-            const topRadius = points[points.length-1].x;
-            const topY = points[points.length-1].y;
-            // Using a TubeGeometry along a circular curve so texture maps correctly along the length
+
+            // Rim binding
+            const topRadius = points[points.length - 1].x;
+            const topY = points[points.length - 1].y;
+
             class CircleCurve extends THREE.Curve {
-                constructor(scale) { super(); this.s = scale; }
+                constructor(scale) {
+                    super();
+                    this.s = scale;
+                }
                 getPoint(t, optionalTarget = new THREE.Vector3()) {
                     const angle = t * Math.PI * 2;
                     return optionalTarget.set(Math.cos(angle) * this.s, 0, Math.sin(angle) * this.s);
                 }
             }
-            const ringGeo = new THREE.TubeGeometry(new CircleCurve(topRadius), 128, 0.25, 16, true);
+
+            const ringGeo = new THREE.TubeGeometry(new CircleCurve(topRadius), 128, 0.22, 16, true);
             const ringMesh = new THREE.Mesh(ringGeo, rawBambooMat);
             ringMesh.position.y = topY;
+            ringMesh.castShadow = true;
+            ringMesh.receiveShadow = true;
             weaveGroup.add(ringMesh);
-            
+
             // Auto rotate camera to show it off
             camera.position.set(0, 6, 12);
             controls.autoRotate = true;
             controls.autoRotateSpeed = 2.0;
+            controls.target.set(0, 0, 0);
         }
 
+        // ---------- RESET ----------
         function resetSim() {
             state = {
-                stage: 'prep', moisture: 50, pattern: 'checkerboard', kamchis: [],
-                maxRows: 12, maxCols: 12, isReadyToWeave: false, isDragging: false, dragProgress: 0,
-                selectedShape: 'tokri', skeletonProgress: 0
+                stage: 'prep',
+                moisture: 50,
+                pattern: 'checkerboard',
+                kamchis: [],
+                maxRows: 12,
+                maxCols: 12,
+                isReadyToWeave: false,
+                isDragging: false,
+                dragProgress: 0,
+                selectedShape: 'tokri',
+                skeletonProgress: 0
             };
-            
+
             // Reset UI
-            ui.moistureSlider.value = 50; ui.moistureVal.innerText = '50%';
-            ui.moistureFeedback.innerText = "Optimal moisture! Flexible and strong.";
-            ui.moistureFeedback.className = "text-xs text-green-600 font-bold";
+            ui.moistureSlider.value = 50;
+            ui.moistureVal.innerText = '50%';
+            ui.moistureFeedback.innerText = '✅ Optimal moisture! Flexible and strong.';
+            ui.moistureFeedback.className = 'text-xs text-green-600 font-bold leading-snug';
             ui.prepVisual.style.display = 'none';
             ui.prepControls.classList.remove('opacity-50', 'pointer-events-none');
             ui.weaveControls.classList.add('opacity-50', 'pointer-events-none');
             ui.shapeControls.classList.add('hidden', 'opacity-50', 'pointer-events-none');
-            
-            // Reset Skeleton UI
+
+            // Reset skeleton UI
             document.getElementById('shape-select').disabled = false;
             document.getElementById('shape-select').value = 'tokri';
             document.getElementById('btn-prepare-skeleton').classList.remove('hidden');
             document.getElementById('skeleton-prep-ui').classList.add('hidden');
             document.getElementById('btn-wrap-mat').classList.add('hidden');
             document.getElementById('skeleton-slider').value = 0;
-            
-            ui.stageBadge.innerText = "Stage: Preparation";
-            ui.instruction.innerText = "Adjust moisture and prepare the 3D bamboo.";
+
+            ui.stageBadge.innerText = 'Stage: Preparation';
+            ui.instruction.innerText = 'Adjust moisture and prepare the 3D bamboo.';
             ui.cultureContent.innerHTML = cultureData.prep;
             ui.patternSelect.value = 'checkerboard';
-            
-            ui.modeToggle.style.display = 'flex'; // Show mode toggle again
-            
+
+            ui.modeToggle.style.display = 'flex';
+            ui.btnModeCraft.className = 'active-craft';
+            ui.btnModeView.className = '';
+
             updateDragHint();
-            
+
             weaveGroup.visible = true;
             skeletonGroup.visible = false;
             buildPrepScene();
+
+            // Reset camera
+            camera.position.set(0, 0, 15);
+            controls.target.set(0, 0, 0);
+            controls.autoRotate = false;
+            controls.enabled = false;
+
+            showToast('🔄 Simulation reset. Ready for a new creation!');
         }
 
-        // Initialize 3D Engine on load
-        window.onload = function() {
-            init3D();
-            ui.cultureContent.innerHTML = cultureData.prep;
-        };
+        // ---------- INIT ON LOAD ----------
+        window.addEventListener('load', function() {
+            // Small delay to ensure layout is stable
+            setTimeout(() => {
+                init3D();
+                ui.cultureContent.innerHTML = cultureData.prep;
+
+                // Initial window resize after layout settles
+                setTimeout(onWindowResize, 200);
+
+                // Show a welcome toast
+                setTimeout(() => {
+                    showToast('🌿 Welcome to the Virtual Bamboo Artisan Experience');
+                }, 800);
+            }, 100);
+        });
+
+        // Handle orientation change
+        window.addEventListener('orientationchange', function() {
+            setTimeout(onWindowResize, 400);
+        });
+
+        // Prevent double-tap zoom on mobile for canvas
+        ui.canvas.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Ensure canvas doesn't scroll page on touch drag
+        ui.canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
 
     </script>
 </body>
