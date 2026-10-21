@@ -17,40 +17,19 @@
                     },
                     colors: {
                         bamboo: {
-                            50: '#f7f9f0',
-                            100: '#eef3e0',
-                            200: '#d9e6c0',
-                            300: '#bdd49a',
-                            400: '#9ebd6d',
-                            500: '#7fa54a',
-                            600: '#648a38',
-                            700: '#4d6b2c',
-                            800: '#3d5525',
-                            900: '#334721',
+                            50: '#f7f9f0', 100: '#eef3e0', 200: '#d9e6c0', 300: '#bdd49a',
+                            400: '#9ebd6d', 500: '#7fa54a', 600: '#648a38', 700: '#4d6b2c',
+                            800: '#3d5525', 900: '#334721',
                         },
                         earth: {
-                            50: '#faf8f5',
-                            100: '#f2ede6',
-                            200: '#e4d9cb',
-                            300: '#d1bfa8',
-                            400: '#b99e7f',
-                            500: '#a68564',
-                            600: '#8f6e52',
-                            700: '#765845',
-                            800: '#61483b',
-                            900: '#513d33',
+                            50: '#faf8f5', 100: '#f2ede6', 200: '#e4d9cb', 300: '#d1bfa8',
+                            400: '#b99e7f', 500: '#a68564', 600: '#8f6e52', 700: '#765845',
+                            800: '#61483b', 900: '#513d33',
                         },
                         gold: {
-                            50: '#fefce8',
-                            100: '#fef9c3',
-                            200: '#fef08a',
-                            300: '#fde047',
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207',
-                            800: '#854d0e',
-                            900: '#713f12',
+                            50: '#fefce8', 100: '#fef9c3', 200: '#fef08a', 300: '#fde047',
+                            400: '#facc15', 500: '#eab308', 600: '#ca8a04', 700: '#a16207',
+                            800: '#854d0e', 900: '#713f12',
                         }
                     },
                     animation: {
@@ -58,6 +37,8 @@
                         'slide-hint': 'slideHint 1.5s ease-in-out infinite',
                         'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+                        'bounce-in': 'bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
                     },
                     keyframes: {
                         float: {
@@ -75,6 +56,14 @@
                         pulseSoft: {
                             '0%, 100%': { opacity: '1' },
                             '50%': { opacity: '0.6' },
+                        },
+                        bounceIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.9) translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(250, 204, 21, 0.3), 0 0 15px rgba(250, 204, 21, 0.1)' },
+                            '100%': { boxShadow: '0 0 20px rgba(250, 204, 21, 0.6), 0 0 40px rgba(250, 204, 21, 0.2)' },
                         }
                     }
                 }
@@ -89,11 +78,13 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
     <!-- Custom Stylesheet -->
     <style>
-        /* ---------- Global reset & Base ---------- */
+        /* ================================================================
+           GLOBAL RESET & BASE
+           ================================================================ */
         *,
         *::before,
         *::after {
@@ -126,39 +117,37 @@
             background: radial-gradient(circle at 20% 10%, #fdfbf7 0%, #f5f0e8 40%, #e8e0d5 100%);
         }
 
-        /* ---------- Scrollbar styling ---------- */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #b99e7f;
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8f6e52;
-        }
+        /* ================================================================
+           SCROLLBAR STYLING
+           ================================================================ */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.03); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #b99e7f; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8f6e52; }
 
-        /* ---------- Typography ---------- */
+        /* ================================================================
+           TYPOGRAPHY
+           ================================================================ */
         h1, h2, h3, h4, .serif-text {
             font-family: 'Playfair Display', Georgia, serif;
             letter-spacing: -0.01em;
         }
 
-        /* ---------- Layout & Panels ---------- */
+        /* ================================================================
+           LAYOUT — APP CONTAINER
+           ================================================================ */
         .app-container {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: 100%;
             overflow: hidden;
+            position: relative;
         }
 
-        /* Header */
+        /* ================================================================
+           HEADER
+           ================================================================ */
         .app-header {
             flex-shrink: 0;
             background: linear-gradient(135deg, #dcedc8 0%, #c5e1a5 50%, #aed581 100%);
@@ -166,93 +155,34 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), inset 0 -1px 0 rgba(255, 255, 255, 0.4);
             position: relative;
             z-index: 40;
-            padding: 0.6rem 1.25rem;
+            padding: 0.5rem 0.75rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             backdrop-filter: blur(4px);
         }
+        @media (min-width: 768px) {
+            .app-header { padding: 0.6rem 1.25rem; }
+        }
         @media (min-width: 1024px) {
-            .app-header {
-                padding: 0.75rem 2rem;
-            }
+            .app-header { padding: 0.75rem 2rem; }
         }
 
-        /* Main area */
+        /* ================================================================
+           MAIN AREA — CENTER STAGE ONLY (NO SIDE PANELS)
+           ================================================================ */
         .app-main {
             flex: 1 1 0%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
-        }
-        @media (min-width: 768px) {
-            .app-main {
-                flex-direction: row;
-            }
+            min-height: 0;
         }
 
-        /* Left Panel */
-        .panel-left {
-            background: linear-gradient(180deg, #f8f4ed 0%, #efebe4 100%);
-            border-right: 1px solid #d7ccc8;
-            box-shadow: inset -4px 0 12px rgba(141, 110, 99, 0.06), 4px 0 24px rgba(0, 0, 0, 0.04);
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            flex-shrink: 0;
-            z-index: 20;
-            padding: 1rem;
-            gap: 1rem;
-        }
-        @media (min-width: 768px) {
-            .panel-left {
-                width: 33.3333%;
-                max-width: 380px;
-                padding: 1.25rem;
-            }
-        }
-        @media (min-width: 1280px) {
-            .panel-left {
-                width: 25%;
-                max-width: 400px;
-                padding: 1.5rem;
-            }
-        }
-
-        /* Right Panel */
-        .panel-right {
-            background: linear-gradient(180deg, #f8f4ed 0%, #efebe4 100%);
-            border-left: 1px solid #d7ccc8;
-            box-shadow: inset 4px 0 12px rgba(141, 110, 99, 0.06), -4px 0 24px rgba(0, 0, 0, 0.04);
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            flex-shrink: 0;
-            z-index: 20;
-            padding: 1rem;
-            gap: 0.75rem;
-        }
-        @media (min-width: 768px) {
-            .panel-right {
-                width: 25%;
-                max-width: 340px;
-                padding: 1.25rem;
-            }
-        }
-        @media (min-width: 1280px) {
-            .panel-right {
-                width: 22%;
-                max-width: 360px;
-                padding: 1.5rem;
-            }
-        }
-
-        /* Center stage */
+        /* ================================================================
+           CENTER STAGE
+           ================================================================ */
         .stage-center {
             flex: 1 1 0%;
             display: flex;
@@ -266,16 +196,16 @@
             overflow: hidden;
         }
         @media (min-width: 768px) {
-            .stage-center {
-                padding: 1rem;
-            }
+            .stage-center { padding: 1rem; }
         }
 
-        /* Canvas container */
+        /* ================================================================
+           CANVAS CONTAINER
+           ================================================================ */
         .canvas-wrapper {
             position: relative;
             width: 100%;
-            max-width: min(90vw, 680px);
+            max-width: min(92vw, 680px);
             aspect-ratio: 1 / 1;
             flex-shrink: 0;
             border-radius: 16px;
@@ -285,14 +215,10 @@
             touch-action: none;
         }
         @media (min-width: 1024px) {
-            .canvas-wrapper {
-                max-width: min(75vw, 720px);
-            }
+            .canvas-wrapper { max-width: min(75vw, 720px); }
         }
         @media (min-width: 1440px) {
-            .canvas-wrapper {
-                max-width: 800px;
-            }
+            .canvas-wrapper { max-width: 800px; }
         }
 
         canvas {
@@ -305,7 +231,9 @@
             touch-action: none;
         }
 
-        /* Drag hint */
+        /* ================================================================
+           DRAG HINT
+           ================================================================ */
         .drag-hint {
             position: absolute;
             left: 0;
@@ -317,9 +245,7 @@
             z-index: 20;
             padding-left: 4px;
         }
-        .drag-hint.show {
-            display: flex;
-        }
+        .drag-hint.show { display: flex; }
         .drag-hint .hint-bubble {
             background: linear-gradient(135deg, #facc15, #eab308);
             color: #713f12;
@@ -337,16 +263,15 @@
             white-space: nowrap;
         }
         @media (min-width: 768px) {
-            .drag-hint .hint-bubble {
-                font-size: 12px;
-                padding: 5px 14px 5px 12px;
-            }
+            .drag-hint .hint-bubble { font-size: 12px; padding: 5px 14px 5px 12px; }
         }
 
-        /* Toast */
+        /* ================================================================
+           TOAST
+           ================================================================ */
         .toast {
             position: fixed;
-            bottom: 2rem;
+            bottom: 6rem;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
             background: linear-gradient(135deg, #1f2937, #111827);
@@ -365,20 +290,15 @@
             letter-spacing: 0.01em;
             backdrop-filter: blur(8px);
         }
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* Zen mode */
+        /* ================================================================
+           ZEN MODE
+           ================================================================ */
         .zen-mode .app-header,
-        .zen-mode .panel-left,
-        .zen-mode .panel-right {
-            display: none !important;
-        }
-        .zen-mode .app-main {
-            flex-direction: row;
-        }
+        .zen-mode .floating-controls,
+        .zen-mode #lore-toggle-btn { display: none !important; }
+        .zen-mode .app-main { flex-direction: row; }
         .zen-mode .stage-center {
             width: 100vw;
             height: 100vh;
@@ -389,114 +309,452 @@
             max-height: min(95vw, 95vh);
             border-radius: 12px;
         }
-        .zen-mode #exit-zen-btn {
-            display: flex !important;
-        }
+        .zen-mode #exit-zen-btn { display: flex !important; }
 
-        /* Mode toggle */
-        .mode-toggle {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 9999px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        /* ================================================================
+           FLOATING BOTTOM CONTROL BAR
+           ================================================================ */
+        .floating-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
             display: flex;
-            padding: 3px;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-        .mode-toggle button {
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-size: 11px;
-            font-weight: 700;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            letter-spacing: 0.02em;
-            white-space: nowrap;
-            border: none;
-            cursor: pointer;
-            background: transparent;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0 0.75rem 0.75rem;
+            pointer-events: none;
         }
         @media (min-width: 768px) {
-            .mode-toggle button {
-                font-size: 12px;
-                padding: 7px 18px;
-            }
+            .floating-controls { padding: 0 1.5rem 1rem; }
         }
-        .mode-toggle button.active-craft {
-            background: linear-gradient(135deg, #4d6b2c, #3d5525);
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(77, 107, 44, 0.3);
-        }
-        .mode-toggle button.active-view {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-        }
-        .mode-toggle button:not(.active-craft):not(.active-view) {
-            color: #6b7280;
-        }
-        .mode-toggle button:not(.active-craft):not(.active-view):hover {
-            background: rgba(0, 0, 0, 0.04);
+        @media (min-width: 1024px) {
+            .floating-controls { padding: 0 2rem 1.25rem; }
         }
 
-        /* Buttons */
-        .btn-primary {
+        .control-bar {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 20px;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.12), 0 4px 20px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(209, 191, 168, 0.3);
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
             width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
+            max-width: 900px;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .control-bar { padding: 0.75rem; gap: 0.75rem; max-width: 800px; }
+        }
+        @media (min-width: 1024px) {
+            .control-bar { max-width: 720px; }
+        }
+
+        /* Step indicator row */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0 0.5rem;
+        }
+        .step-dot {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: #e5e7eb;
+            color: #9ca3af;
+            border: 2px solid transparent;
+            flex-shrink: 0;
+            position: relative;
+        }
+        @media (min-width: 768px) {
+            .step-dot { width: 32px; height: 32px; font-size: 12px; }
+        }
+        .step-dot.active {
+            background: linear-gradient(135deg, #4d6b2c, #3d5525);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(77, 107, 44, 0.4);
+            transform: scale(1.1);
+            border-color: #bdd49a;
+        }
+        .step-dot.completed {
+            background: linear-gradient(135deg, #7fa54a, #648a38);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(127, 165, 74, 0.3);
+        }
+        .step-dot.completed::after {
+            content: '✓';
+            position: absolute;
+            font-size: 10px;
+            top: -2px;
+            right: -2px;
+            background: #16a34a;
+            color: #fff;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            border: 1.5px solid #fff;
+        }
+        .step-connector {
+            width: 16px;
+            height: 2px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            align-self: center;
+            transition: all 0.3s ease;
+        }
+        .step-connector.completed { background: #7fa54a; }
+        @media (min-width: 768px) {
+            .step-connector { width: 24px; }
+        }
+
+        /* Step content area */
+        .step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.25rem 0.5rem 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .step-content { gap: 0.75rem; padding: 0.25rem 0.75rem 0.5rem; }
+        }
+
+        /* Horizontal controls */
+        .controls-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+        .controls-row .control-item {
+            flex: 1 1 0%;
+            min-width: 0;
+        }
+
+        /* Slider group */
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .slider-group label {
+            font-size: 10px;
             font-weight: 700;
-            font-size: 0.875rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        @media (min-width: 768px) {
+            .slider-group label { font-size: 11px; }
+        }
+        .slider-group .value-badge {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1px 8px;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        /* Select group */
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .select-group label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        @media (min-width: 768px) {
+            .select-group label { font-size: 11px; }
+        }
+
+        /* Compact buttons */
+        .btn-compact {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.6rem;
+            font-weight: 700;
+            font-size: 11px;
             letter-spacing: 0.01em;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.35rem;
+            white-space: nowrap;
             position: relative;
             overflow: hidden;
         }
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
-            pointer-events: none;
+        @media (min-width: 768px) {
+            .btn-compact { padding: 0.6rem 1rem; font-size: 12px; }
         }
-        .btn-primary:active {
-            transform: scale(0.97);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-        }
-        .btn-primary:disabled,
-        .btn-primary.disabled {
-            opacity: 0.5;
+        .btn-compact:active { transform: scale(0.96); }
+        .btn-compact:disabled, .btn-compact.disabled {
+            opacity: 0.4;
             pointer-events: none;
             transform: none;
         }
-
-        .btn-green {
+        .btn-compact.btn-green {
             background: linear-gradient(135deg, #4d6b2c, #3d5525);
             color: #fff;
         }
-        .btn-green:hover:not(:disabled) {
+        .btn-compact.btn-green:hover:not(:disabled) {
             background: linear-gradient(135deg, #5a7d35, #4a6a2c);
-            box-shadow: 0 6px 20px rgba(77, 107, 44, 0.35);
+            box-shadow: 0 4px 16px rgba(77, 107, 44, 0.35);
         }
-
-        .btn-amber {
+        .btn-compact.btn-amber {
             background: linear-gradient(135deg, #b45309, #92400e);
             color: #fff;
         }
-        .btn-amber:hover:not(:disabled) {
+        .btn-compact.btn-amber:hover:not(:disabled) {
             background: linear-gradient(135deg, #ca6a1a, #a34f0e);
-            box-shadow: 0 6px 20px rgba(180, 83, 9, 0.35);
+            box-shadow: 0 4px 16px rgba(180, 83, 9, 0.35);
+        }
+        .btn-compact.btn-blue {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+        }
+        .btn-compact.btn-blue:hover:not(:disabled) {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
         }
 
-        /* Inputs */
+        /* ================================================================
+           LORE TOGGLE BUTTON (BULB) — BOTTOM RIGHT
+           ================================================================ */
+        .lore-toggle-btn {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            z-index: 60;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #713f12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(234, 179, 8, 0.4), 0 2px 8px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @media (min-width: 768px) {
+            .lore-toggle-btn { width: 64px; height: 64px; bottom: 1.5rem; right: 1.5rem; }
+        }
+        @media (min-width: 1024px) {
+            .lore-toggle-btn { width: 68px; height: 68px; bottom: 2rem; right: 2rem; }
+        }
+        .lore-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 32px rgba(234, 179, 8, 0.6), 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .lore-toggle-btn:active {
+            transform: scale(0.95);
+        }
+        .lore-toggle-btn svg {
+            width: 26px;
+            height: 26px;
+            transition: all 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            .lore-toggle-btn svg { width: 30px; height: 30px; }
+        }
+        .lore-toggle-btn.active {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            animation: none;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* ================================================================
+           LORE MODAL — POP-OUT
+           ================================================================ */
+        .lore-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 55;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @media (min-width: 768px) {
+            .lore-modal-overlay { padding: 2rem; }
+        }
+        .lore-modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lore-modal {
+            background: linear-gradient(180deg, #faf8f5 0%, #f2ede6 100%);
+            border-radius: 1.25rem;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(209, 191, 168, 0.4);
+            width: 100%;
+            max-width: 520px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+            opacity: 0;
+        }
+        @media (min-width: 768px) {
+            .lore-modal { max-width: 600px; max-height: 75vh; }
+        }
+        @media (min-width: 1024px) {
+            .lore-modal { max-width: 680px; }
+        }
+        .lore-modal-overlay.open .lore-modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .lore-modal-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(209, 191, 168, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #eef3e0, #d9e6c0);
+        }
+        @media (min-width: 768px) {
+            .lore-modal-header { padding: 1.25rem 1.5rem; }
+        }
+
+        .lore-modal-body {
+            padding: 1rem 1.25rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+        @media (min-width: 768px) {
+            .lore-modal-body { padding: 1.25rem 1.5rem; }
+        }
+
+        .lore-modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            color: #4b5563;
+        }
+        .lore-modal-close:hover {
+            background: rgba(0, 0, 0, 0.12);
+            transform: scale(1.05);
+        }
+        .lore-modal-close:active { transform: scale(0.95); }
+
+        /* ================================================================
+           CULTURAL LORE CONTENT STYLES
+           ================================================================ */
+        .culture-image {
+            width: 100%;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            object-fit: cover;
+            aspect-ratio: 16/10;
+            background: #e4d9cb;
+        }
+        .culture-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ================================================================
+           INSTRUCTION TEXT
+           ================================================================ */
+        .instruction-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4b5563;
+            line-height: 1.5;
+            text-align: center;
+            max-width: 100%;
+            padding: 0 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .instruction-text { font-size: 1rem; }
+        }
+
+        /* ================================================================
+           EXIT ZEN BUTTON
+           ================================================================ */
+        #exit-zen-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: #1f2937;
+            color: #fff;
+            border-radius: 9999px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        #exit-zen-btn:hover {
+            background: #374151;
+            transform: scale(1.03);
+        }
+
+        /* ================================================================
+           FORM ELEMENTS
+           ================================================================ */
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
@@ -540,11 +798,11 @@
 
         select {
             width: 100%;
-            padding: 0.6rem 0.75rem;
+            padding: 0.5rem 0.6rem;
             border: 1.5px solid #d1bfa8;
-            border-radius: 0.6rem;
+            border-radius: 0.5rem;
             background: #fff;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #3e2723;
             transition: all 0.2s;
@@ -553,8 +811,11 @@
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238f6e52' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 0.75rem center;
+            background-position: right 0.5rem center;
             background-size: 12px;
+        }
+        @media (min-width: 768px) {
+            select { padding: 0.6rem 0.75rem; font-size: 0.85rem; }
         }
         select:focus {
             border-color: #7fa54a;
@@ -566,7 +827,9 @@
             background: #f5f5f4;
         }
 
-        /* Stage badge */
+        /* ================================================================
+           STAGE BADGE
+           ================================================================ */
         .stage-badge {
             display: inline-flex;
             align-items: center;
@@ -584,194 +847,159 @@
             transition: all 0.3s ease;
         }
         @media (min-width: 768px) {
-            .stage-badge {
-                font-size: 11px;
-                padding: 5px 14px;
-            }
+            .stage-badge { font-size: 11px; padding: 5px 14px; }
         }
 
-        /* Cultural lore images */
-        .culture-image {
-            width: 100%;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+        /* ================================================================
+           MODE TOGGLE
+           ================================================================ */
+        .mode-toggle {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 9999px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            display: flex;
+            padding: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
-            object-fit: cover;
-            aspect-ratio: 16/10;
-            background: #e4d9cb;
+            flex-shrink: 0;
         }
-        .culture-image:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        }
-
-        /* Instruction text */
-        .instruction-text {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #4b5563;
-            line-height: 1.5;
-            text-align: center;
-            max-width: 100%;
-            padding: 0 0.5rem;
+        .mode-toggle button {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            background: transparent;
         }
         @media (min-width: 768px) {
-            .instruction-text {
-                font-size: 1.05rem;
-            }
+            .mode-toggle button { font-size: 12px; padding: 7px 18px; }
         }
-
-        /* Focus mode exit button */
-        #exit-zen-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            z-index: 50;
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            background: #1f2937;
+        .mode-toggle button.active-craft {
+            background: linear-gradient(135deg, #4d6b2c, #3d5525);
             color: #fff;
-            border-radius: 9999px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-            font-size: 0.8rem;
-            font-weight: 700;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
+            box-shadow: 0 2px 8px rgba(77, 107, 44, 0.3);
         }
-        #exit-zen-btn:hover {
-            background: #374151;
-            transform: scale(1.03);
+        .mode-toggle button.active-view {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
-
-        /* Section headers */
-        .section-header {
-            font-size: 1.15rem;
-            font-weight: 700;
-            font-family: 'Playfair Display', serif;
-            color: #4d6b2c;
-            border-bottom: 2px solid #bdd49a;
-            padding-bottom: 0.4rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.01em;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .mode-toggle button:not(.active-craft):not(.active-view) {
+            color: #6b7280;
+        }
+        .mode-toggle button:not(.active-craft):not(.active-view):hover {
+            background: rgba(0, 0, 0, 0.04);
         }
 
-        /* Card-like control blocks */
-        .control-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 0.85rem;
-            padding: 0.85rem;
-            border: 1px solid rgba(209, 191, 168, 0.3);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
-            transition: all 0.3s ease;
-        }
-        .control-card:hover {
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-        }
+        /* ================================================================
+           UTILITY CLASSES
+           ================================================================ */
+        .hidden { display: none !important; }
+        .no-select { -webkit-user-select: none; user-select: none; }
+        .touch-target { min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: center; }
 
-        /* Hidden elements */
-        .hidden {
-            display: none !important;
-        }
-
-        /* Responsive touch feedback */
-        @media (hover: none) {
-            .btn-primary:hover {
-                transform: none;
-            }
-            .btn-primary:active {
-                transform: scale(0.96);
-            }
-        }
-
-        /* Smooth transitions for panels */
-        .panel-left,
-        .panel-right {
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* Loading shimmer (for the canvas while initializing) */
-        .shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* Ensure touch targets are at least 44px */
-        .touch-target {
-            min-height: 44px;
-            min-width: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Scroll lock for body */
-        body {
-            overscroll-behavior: none;
-        }
-
-        /* Better focus outlines for accessibility */
         :focus-visible {
             outline: 2px solid #4d6b2c;
             outline-offset: 2px;
         }
-        button:focus:not(:focus-visible) {
-            outline: none;
+        button:focus:not(:focus-visible) { outline: none; }
+
+        /* ================================================================
+           RESPONSIVE TOUCH FEEDBACK
+           ================================================================ */
+        @media (hover: none) {
+            .btn-compact:hover { transform: none; }
+            .btn-compact:active { transform: scale(0.96); }
         }
 
-        /* Prevent text selection on UI elements */
-        .no-select {
-            -webkit-user-select: none;
-            user-select: none;
+        /* ================================================================
+           SCROLL LOCK
+           ================================================================ */
+        body { overscroll-behavior: none; }
+
+        /* ================================================================
+           STEP PANEL ANIMATIONS
+           ================================================================ */
+        .step-panel {
+            animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Fullscreen canvas on zen mode */
-        .zen-mode canvas {
-            border-radius: 8px;
+        /* ================================================================
+           MOBILE-SPECIFIC TWEAKS
+           ================================================================ */
+        @media (max-width: 480px) {
+            .canvas-wrapper { max-width: 96vw; border-radius: 12px; }
+            .control-bar { border-radius: 16px; padding: 0.4rem; }
+            .step-dot { width: 24px; height: 24px; font-size: 10px; }
+            .step-connector { width: 10px; }
+            .btn-compact { font-size: 10px; padding: 0.45rem 0.6rem; }
+            .lore-toggle-btn { width: 48px; height: 48px; bottom: 0.75rem; right: 0.75rem; }
+            .lore-toggle-btn svg { width: 22px; height: 22px; }
+            .toast { bottom: 5rem; padding: 0.6rem 1.25rem; font-size: 0.8rem; }
         }
 
-        /* Debug outline (disabled) */
-        /* * { outline: 1px solid red; } */
+        /* ================================================================
+           LANDSCAPE PHONE — HIDE SOME ELEMENTS
+           ================================================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .canvas-wrapper { max-width: min(50vw, 60vh); }
+            .control-bar { max-width: 500px; }
+            .step-indicator { display: none; }
+        }
+
+        /* ================================================================
+           SAFE AREA INSETS FOR NOTCHED DEVICES
+           ================================================================ */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .floating-controls {
+                padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+            }
+            .lore-toggle-btn {
+                bottom: calc(1.25rem + env(safe-area-inset-bottom));
+            }
+            .toast {
+                bottom: calc(6rem + env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body class="no-select">
 
     <div class="app-container" id="app-container">
 
-        <!-- ===== HEADER ===== -->
+        <!-- ============================================================
+             HEADER
+             ============================================================ -->
         <header class="app-header">
-            <div class="flex items-center gap-3 min-w-0">
+            <div class="flex items-center gap-2 min-w-0">
                 <div class="flex-shrink-0">
-                    <svg class="w-8 h-8 md:w-10 md:h-10 text-green-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <svg class="w-7 h-7 md:w-9 md:h-9 text-green-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M12 2C8 2 4 5 4 10c0 3 2 5 3 6l2 2c1 1 2 2 3 2s2-1 3-2l2-2c1-1 3-3 3-6 0-5-4-8-8-8z" />
                         <path d="M12 8v8" />
                         <path d="M8 12h8" />
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <h1 class="text-lg md:text-2xl font-bold text-green-900 tracking-tight leading-tight truncate">
+                    <h1 class="text-sm md:text-xl font-bold text-green-900 tracking-tight leading-tight truncate">
                         Virtual Bamboo Artisan
                     </h1>
-                    <p class="text-green-800/80 text-[10px] md:text-xs font-medium tracking-wide truncate">
+                    <p class="text-green-800/70 text-[9px] md:text-[11px] font-medium tracking-wide truncate">
                         Preserving the Craft of Shahdol's Tribes
                     </p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            <div class="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
                 <span class="stage-badge hidden sm:inline-flex" id="stage-badge">Stage: Preparation</span>
 
                 <!-- Mode Toggle -->
@@ -785,16 +1013,16 @@
                 </div>
 
                 <!-- Focus Mode Button -->
-                <button onclick="toggleZenMode()" id="zen-btn" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-green-100 hover:bg-green-200 text-green-900 rounded-lg shadow-sm text-xs font-bold transition-all border border-green-300 touch-target">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button onclick="toggleZenMode()" id="zen-btn" class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 bg-green-100 hover:bg-green-200 text-green-900 rounded-lg shadow-sm text-[10px] font-bold transition-all border border-green-300 touch-target">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                     </svg>
                     <span class="hidden lg:inline">Focus</span>
                 </button>
 
                 <!-- Reset Button -->
-                <button onclick="resetSim()" class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg shadow-sm text-xs font-bold transition-all border border-amber-300 touch-target">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button onclick="resetSim()" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg shadow-sm text-[10px] font-bold transition-all border border-amber-300 touch-target">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
                     <span class="hidden sm:inline">Reset</span>
@@ -802,125 +1030,11 @@
             </div>
         </header>
 
-        <!-- ===== MAIN AREA ===== -->
+        <!-- ============================================================
+             MAIN AREA — CENTER STAGE
+             ============================================================ -->
         <div class="app-main">
 
-            <!-- LEFT PANEL: Controls -->
-            <aside class="panel-left" id="panel-left">
-
-                <!-- Section 1: Material Prep -->
-                <div id="prep-controls" class="space-y-4 animate-fade-in-up">
-                    <h2 class="section-header">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
-                        1. Material Prep
-                    </h2>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Before weaving a <i class="serif-text font-semibold text-amber-800">Tokri</i>, the Baiga artisans prepare bamboo. Adjust moisture before splitting.
-                    </p>
-
-                    <div class="control-card space-y-3">
-                        <div class="flex justify-between items-center">
-                            <label for="moisture" class="text-sm font-bold text-gray-700 flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                                </svg>
-                                Bamboo Moisture
-                            </label>
-                            <span id="moisture-val" class="text-sm font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-md">50%</span>
-                        </div>
-                        <input type="range" id="moisture" min="0" max="100" value="50" class="w-full">
-                        <p id="moisture-feedback" class="text-xs text-green-600 font-semibold leading-snug">
-                            Optimal moisture! Flexible and strong.
-                        </p>
-                    </div>
-
-                    <button onclick="splitBamboo()" class="btn-primary btn-green">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                        Split & Shave Bamboo (Kamchis)
-                    </button>
-                </div>
-
-                <!-- Section 2: Weaving Process -->
-                <div id="weave-controls" class="space-y-4 opacity-50 pointer-events-none transition-all duration-300 mt-2">
-                    <h2 class="section-header">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                        </svg>
-                        2. Weaving Process
-                    </h2>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Select a traditional pattern to weave your Kamchis.
-                    </p>
-
-                    <div class="control-card space-y-2">
-                        <label class="block text-sm font-bold text-gray-700">Weaving Pattern</label>
-                        <select id="pattern-select" onchange="changePattern()">
-                            <option value="checkerboard">Checkerboard (Basic Tokri)</option>
-                            <option value="twill">Twill 2/2 (Grain Storage)</option>
-                            <option value="twill31">Twill 3/1 (Heavy Load Dala)</option>
-                            <option value="herringbone">Herringbone (Decorative Zig-Zag)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Section 3: Shaping -->
-                <div id="shape-controls" class="space-y-4 opacity-50 pointer-events-none hidden transition-all duration-300 mt-2">
-                    <h2 class="section-header">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
-                        </svg>
-                        3. Shaping the Object
-                    </h2>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Bend and bind the woven mat into its final 3D form.
-                    </p>
-
-                    <div class="control-card space-y-3">
-                        <label class="block text-sm font-bold text-gray-700">Final Artifact</label>
-                        <select id="shape-select">
-                            <option value="tokri">Tokri (Deep Basket)</option>
-                            <option value="kothi">Kothi (Storage Silo)</option>
-                            <option value="dala">Dala (Wide Tray)</option>
-                        </select>
-                    </div>
-
-                    <button id="btn-prepare-skeleton" onclick="prepareSkeleton()" class="btn-primary btn-amber">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                        Build Skeleton Frame
-                    </button>
-
-                    <div id="skeleton-prep-ui" class="hidden space-y-3 bg-amber-50/70 p-3 rounded-xl border border-amber-200/60 mt-3">
-                        <label class="block text-sm font-bold text-amber-900 flex items-center gap-1.5">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                            Bend Bamboo Framework
-                        </label>
-                        <input type="range" id="skeleton-slider" min="0" max="100" value="0" class="w-full accent-amber-600">
-                        <p id="skeleton-instruction" class="text-xs text-amber-800 italic leading-snug">
-                            Drag the slider to bend the straight bamboo into structural rings.
-                        </p>
-                    </div>
-
-                    <button id="btn-wrap-mat" onclick="shapeObject()" class="hidden btn-primary btn-green mt-4">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                        </svg>
-                        Wrap Mat & Bind Artifact
-                    </button>
-                </div>
-
-                <!-- Spacer for mobile scroll -->
-                <div class="h-4"></div>
-            </aside>
-
-            <!-- CENTER STAGE: Canvas -->
             <section class="stage-center" id="stage-center">
                 <button onclick="toggleZenMode()" id="exit-zen-btn" class="flex">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -945,7 +1059,7 @@
 
                     <!-- Stage 1 HTML overlay (bamboo stalk visual) -->
                     <div id="prep-visual" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div class="w-16 h-64 bg-gradient-to-b from-green-500 via-green-600 to-green-700 rounded-full shadow-2xl transition-all duration-300 relative overflow-hidden" id="bamboo-stalk">
+                        <div class="w-14 h-56 md:w-16 md:h-64 bg-gradient-to-b from-green-500 via-green-600 to-green-700 rounded-full shadow-2xl transition-all duration-300 relative overflow-hidden" id="bamboo-stalk">
                             <div class="absolute w-full h-0.5 bg-green-900/30 top-1/4"></div>
                             <div class="absolute w-full h-0.5 bg-green-900/30 top-2/4"></div>
                             <div class="absolute w-full h-0.5 bg-green-900/30 top-3/4"></div>
@@ -957,31 +1071,146 @@
                     </div>
                 </div>
 
-                <div class="mt-3 md:mt-4 text-center px-4">
+                <div class="mt-2 md:mt-3 text-center px-4">
                     <p id="canvas-instruction" class="instruction-text">
                         Adjust moisture and prepare the bamboo.
                     </p>
                 </div>
             </section>
 
-            <!-- RIGHT PANEL: Cultural Lore -->
-            <aside class="panel-right" id="panel-right">
-                <h2 class="text-xl md:text-2xl serif-text font-bold text-amber-900 flex items-center gap-2 leading-tight">
-                    <svg class="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    Cultural Lore
-                </h2>
-                <div id="culture-content" class="text-sm text-gray-800 space-y-4 leading-relaxed">
+        </div>
+
+        <!-- ============================================================
+             FLOATING BOTTOM CONTROL BAR
+             ============================================================ -->
+        <div class="floating-controls" id="floating-controls">
+            <div class="control-bar" id="control-bar">
+
+                <!-- Step Indicator -->
+                <div class="step-indicator" id="step-indicator">
+                    <div class="step-dot active" data-step="0" id="step-dot-0">1</div>
+                    <div class="step-connector" id="step-conn-0"></div>
+                    <div class="step-dot" data-step="1" id="step-dot-1">2</div>
+                    <div class="step-connector" id="step-conn-1"></div>
+                    <div class="step-dot" data-step="2" id="step-dot-2">3</div>
+                </div>
+
+                <!-- Step Content: PREP -->
+                <div class="step-content step-panel" id="step-panel-prep">
+                    <div class="slider-group">
+                        <label for="moisture">
+                            Bamboo Moisture
+                            <span id="moisture-val" class="value-badge">50%</span>
+                        </label>
+                        <input type="range" id="moisture" min="0" max="100" value="50">
+                        <p id="moisture-feedback" class="text-[10px] md:text-xs text-green-600 font-semibold leading-snug">
+                            ✅ Optimal moisture! Flexible and strong.
+                        </p>
+                    </div>
+                    <button onclick="splitBamboo()" class="btn-compact btn-green w-full">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                        Split & Shave Bamboo (Kamchis)
+                    </button>
+                </div>
+
+                <!-- Step Content: WEAVE -->
+                <div class="step-content step-panel hidden" id="step-panel-weave">
+                    <div class="select-group">
+                        <label for="pattern-select">Weaving Pattern</label>
+                        <select id="pattern-select" onchange="changePattern()">
+                            <option value="checkerboard">Checkerboard (Basic Tokri)</option>
+                            <option value="twill">Twill 2/2 (Grain Storage)</option>
+                            <option value="twill31">Twill 3/1 (Heavy Load Dala)</option>
+                            <option value="herringbone">Herringbone (Decorative Zig-Zag)</option>
+                        </select>
+                    </div>
+                    <p class="text-[10px] md:text-xs text-gray-500 text-center" id="weave-progress-text">
+                        Drag from the left to weave each row.
+                    </p>
+                </div>
+
+                <!-- Step Content: SHAPE -->
+                <div class="step-content step-panel hidden" id="step-panel-shape">
+                    <div class="select-group">
+                        <label for="shape-select">Final Artifact</label>
+                        <select id="shape-select">
+                            <option value="tokri">Tokri (Deep Basket)</option>
+                            <option value="kothi">Kothi (Storage Silo)</option>
+                            <option value="dala">Dala (Wide Tray)</option>
+                        </select>
+                    </div>
+
+                    <button id="btn-prepare-skeleton" onclick="prepareSkeleton()" class="btn-compact btn-amber w-full">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        Build Skeleton Frame
+                    </button>
+
+                    <div id="skeleton-prep-ui" class="hidden space-y-2 mt-1">
+                        <div class="slider-group">
+                            <label for="skeleton-slider">
+                                Bend Bamboo Framework
+                            </label>
+                            <input type="range" id="skeleton-slider" min="0" max="100" value="0" class="accent-amber-600">
+                            <p id="skeleton-instruction" class="text-[10px] md:text-xs text-amber-800 italic leading-snug">
+                                Drag the slider to bend the straight bamboo into structural rings.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button id="btn-wrap-mat" onclick="shapeObject()" class="hidden btn-compact btn-green w-full mt-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                        </svg>
+                        Wrap Mat & Bind Artifact
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ============================================================
+             LORE TOGGLE BUTTON (BULB) — BOTTOM RIGHT
+             ============================================================ -->
+        <button class="lore-toggle-btn" id="lore-toggle-btn" onclick="toggleLoreModal()" aria-label="Toggle Cultural Lore">
+            <svg id="lore-icon-bulb" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <svg id="lore-icon-close" class="hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- ============================================================
+             LORE MODAL — POP-OUT
+             ============================================================ -->
+        <div class="lore-modal-overlay" id="lore-modal-overlay" onclick="closeLoreModalOnOverlay(event)">
+            <div class="lore-modal" id="lore-modal" onclick="event.stopPropagation()">
+                <div class="lore-modal-header">
+                    <h2 class="text-lg md:text-xl serif-text font-bold text-amber-900 flex items-center gap-2 leading-tight">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        Cultural Lore
+                    </h2>
+                    <button class="lore-modal-close" onclick="toggleLoreModal()" aria-label="Close Lore">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="lore-modal-body" id="culture-content">
                     <!-- Dynamic content inserted via JS -->
                 </div>
-                <div class="mt-auto pt-4 border-t border-earth-200/60">
+                <div class="px-4 pb-3 pt-2 border-t border-earth-200/60 flex-shrink-0">
                     <p class="text-[10px] text-gray-400 text-center font-medium tracking-wide uppercase">
                         Shahdol · Madhya Pradesh · India
                     </p>
                 </div>
-            </aside>
-
+            </div>
         </div>
 
     </div>
@@ -991,12 +1220,15 @@
         Notification
     </div>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- ================================================================
+         SCRIPTS — ENTERPRISE EDITION
+         ================================================================ -->
     <script>
-        // ============================================================
+        // ================================================================
         //  VIRTUAL BAMBOO ARTISAN — ENTERPRISE EDITION
         //  Enhanced UI/UX · Responsive Design · Polished 3D
-        // ============================================================
+        //  Floating Bottom Controls · Pop-out Lore Modal
+        // ================================================================
 
         // ---------- CULTURAL DATA ----------
         const cultureData = {
@@ -1113,7 +1345,8 @@
             isDragging: false,
             dragProgress: 0,
             selectedShape: 'tokri',
-            skeletonProgress: 0
+            skeletonProgress: 0,
+            loreOpen: false
         };
 
         // ---------- DOM ELEMENTS ----------
@@ -1123,10 +1356,6 @@
             moistureFeedback: document.getElementById('moisture-feedback'),
             bambooStalk: document.getElementById('bamboo-stalk'),
             prepVisual: document.getElementById('prep-visual'),
-            prepControls: document.getElementById('prep-controls'),
-            weaveControls: document.getElementById('weave-controls'),
-            shapeControls: document.getElementById('shape-controls'),
-            shapeSelect: document.getElementById('shape-select'),
             canvas: document.getElementById('sim-canvas'),
             canvasWrapper: document.getElementById('canvas-wrapper'),
             instruction: document.getElementById('canvas-instruction'),
@@ -1138,9 +1367,20 @@
             btnModeCraft: document.getElementById('btn-mode-craft'),
             btnModeView: document.getElementById('btn-mode-view'),
             body: document.body,
-            panelLeft: document.getElementById('panel-left'),
-            panelRight: document.getElementById('panel-right'),
-            stageCenter: document.getElementById('stage-center')
+            stageCenter: document.getElementById('stage-center'),
+            loreToggleBtn: document.getElementById('lore-toggle-btn'),
+            loreModalOverlay: document.getElementById('lore-modal-overlay'),
+            loreIconBulb: document.getElementById('lore-icon-bulb'),
+            loreIconClose: document.getElementById('lore-icon-close'),
+            stepDot0: document.getElementById('step-dot-0'),
+            stepDot1: document.getElementById('step-dot-1'),
+            stepDot2: document.getElementById('step-dot-2'),
+            stepConn0: document.getElementById('step-conn-0'),
+            stepConn1: document.getElementById('step-conn-1'),
+            stepPanelPrep: document.getElementById('step-panel-prep'),
+            stepPanelWeave: document.getElementById('step-panel-weave'),
+            stepPanelShape: document.getElementById('step-panel-shape'),
+            weaveProgressText: document.getElementById('weave-progress-text')
         };
 
         // ---------- THREE.JS SETUP ----------
@@ -1151,7 +1391,7 @@
         const BAMBOO_EDGE = 0xb49866;
         const WEAVE_SIZE = 10;
 
-        // Enhanced bamboo materials with higher resolution textures
+        // ---------- ENHANCED BAMBOO MATERIALS ----------
         function getBambooMaterial(isVertical) {
             const canvas = document.createElement('canvas');
             canvas.width = 1024;
@@ -1485,7 +1725,6 @@
             prepBambooMesh.receiveShadow = true;
             weaveGroup.add(prepBambooMesh);
 
-            // Add subtle rotation animation in view mode
             setMode('craft');
         }
 
@@ -1497,15 +1736,15 @@
             if (state.moisture < 30) {
                 if (prepBambooMesh) prepBambooMesh.material.color.setHex(0xd4d4d8);
                 ui.moistureFeedback.innerText = '⚠️ Warning: Bamboo is drying out and becoming brittle.';
-                ui.moistureFeedback.className = 'text-xs text-red-600 font-bold leading-snug';
+                ui.moistureFeedback.className = 'text-[10px] md:text-xs text-red-600 font-bold leading-snug';
             } else if (state.moisture > 75) {
                 if (prepBambooMesh) prepBambooMesh.material.color.setHex(0x064e3b);
                 ui.moistureFeedback.innerText = '💧 Warning: Bamboo is too wet. Risk of mold.';
-                ui.moistureFeedback.className = 'text-xs text-blue-600 font-bold leading-snug';
+                ui.moistureFeedback.className = 'text-[10px] md:text-xs text-blue-600 font-bold leading-snug';
             } else {
                 if (prepBambooMesh) prepBambooMesh.material.color.setHex(0x16a34a);
                 ui.moistureFeedback.innerText = '✅ Optimal moisture! Flexible and strong.';
-                ui.moistureFeedback.className = 'text-xs text-green-600 font-bold leading-snug';
+                ui.moistureFeedback.className = 'text-[10px] md:text-xs text-green-600 font-bold leading-snug';
             }
         });
 
@@ -1523,6 +1762,35 @@
             ui.body.classList.toggle('zen-mode');
             setTimeout(onWindowResize, 400);
         }
+
+        // ---------- LORE MODAL ----------
+        function toggleLoreModal() {
+            state.loreOpen = !state.loreOpen;
+            if (state.loreOpen) {
+                ui.loreModalOverlay.classList.add('open');
+                ui.loreToggleBtn.classList.add('active');
+                ui.loreIconBulb.classList.add('hidden');
+                ui.loreIconClose.classList.remove('hidden');
+            } else {
+                ui.loreModalOverlay.classList.remove('open');
+                ui.loreToggleBtn.classList.remove('active');
+                ui.loreIconBulb.classList.remove('hidden');
+                ui.loreIconClose.classList.add('hidden');
+            }
+        }
+
+        function closeLoreModalOnOverlay(e) {
+            if (e.target === ui.loreModalOverlay) {
+                toggleLoreModal();
+            }
+        }
+
+        // Close lore modal on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && state.loreOpen) {
+                toggleLoreModal();
+            }
+        });
 
         // ---------- SPLIT BAMBOO ----------
         function splitBamboo() {
@@ -1554,9 +1822,18 @@
         function transitionToWeaving() {
             state.stage = 'weave';
             state.isReadyToWeave = true;
-            ui.prepControls.classList.add('opacity-50', 'pointer-events-none');
-            ui.weaveControls.classList.remove('opacity-50', 'pointer-events-none');
-            ui.instruction.innerText = '👆 Click and drag from the left to slide a strip across! Rotate with mouse to see 3D depth.';
+
+            // Update step indicator
+            ui.stepDot0.classList.remove('active');
+            ui.stepDot0.classList.add('completed');
+            ui.stepConn0.classList.add('completed');
+            ui.stepDot1.classList.add('active');
+
+            // Switch panels
+            ui.stepPanelPrep.classList.add('hidden');
+            ui.stepPanelWeave.classList.remove('hidden');
+
+            ui.instruction.innerText = '👆 Drag from the left edge of the canvas to slide a strip across!';
             ui.stageBadge.innerText = 'Stage: Weaving';
             ui.cultureContent.innerHTML = cultureData[state.pattern];
 
@@ -1572,6 +1849,7 @@
             state.isDragging = false;
             buildWeaveScene();
             ui.instruction.innerText = 'Pattern changed. Drag across to start weaving.';
+            ui.weaveProgressText.innerText = 'Drag from the left to weave each row.';
         }
 
         // ---------- WEAVE CURVE HELPERS ----------
@@ -1776,6 +2054,7 @@
                 let remaining = state.maxRows - state.kamchis.length;
                 if (remaining > 0) {
                     ui.instruction.innerText = `Great slide! Drag the next strip across. ${remaining} row${remaining > 1 ? 's' : ''} left.`;
+                    ui.weaveProgressText.innerText = `${remaining} row${remaining > 1 ? 's' : ''} remaining`;
                 } else {
                     finishSimulation();
                 }
@@ -1808,16 +2087,33 @@
         window.addEventListener('touchend', endDrag);
         window.addEventListener('touchcancel', endDrag);
 
+        // Prevent double-tap zoom on mobile for canvas
+        ui.canvas.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Ensure canvas doesn't scroll page on touch drag
+        ui.canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
         // ---------- FINISH WEAVING ----------
         function finishSimulation() {
             state.stage = 'shape_skeleton';
-            ui.stageBadge.innerText = 'Stage: Shaping';
-            ui.weaveControls.classList.add('opacity-50', 'pointer-events-none');
-            ui.shapeControls.classList.remove('hidden');
-            setTimeout(() => {
-                ui.shapeControls.classList.remove('opacity-50', 'pointer-events-none');
-            }, 60);
 
+            // Update step indicator
+            ui.stepDot1.classList.remove('active');
+            ui.stepDot1.classList.add('completed');
+            ui.stepConn1.classList.add('completed');
+            ui.stepDot2.classList.add('active');
+
+            // Switch panels
+            ui.stepPanelWeave.classList.add('hidden');
+            ui.stepPanelShape.classList.remove('hidden');
+
+            ui.stageBadge.innerText = 'Stage: Shaping';
             ui.instruction.innerHTML = `<span class="text-green-700 font-bold">🎉 Incredible! You've woven a 3D pattern.</span>`;
             ui.cultureContent.innerHTML = `
                 <h3 class="font-bold text-green-900 text-xl mb-2">Mat Completed</h3>
@@ -2050,9 +2346,12 @@
         // ---------- FINAL OBJECT ----------
         function shapeObject() {
             state.stage = 'done';
-            ui.shapeControls.classList.add('opacity-50', 'pointer-events-none');
-            ui.stageBadge.innerText = 'Stage: Complete';
 
+            // Update step indicator
+            ui.stepDot2.classList.remove('active');
+            ui.stepDot2.classList.add('completed');
+
+            ui.stageBadge.innerText = 'Stage: Complete';
             ui.modeToggle.style.display = 'none';
             setMode('view');
 
@@ -2222,18 +2521,29 @@
                 isDragging: false,
                 dragProgress: 0,
                 selectedShape: 'tokri',
-                skeletonProgress: 0
+                skeletonProgress: 0,
+                loreOpen: state.loreOpen
             };
 
             // Reset UI
             ui.moistureSlider.value = 50;
             ui.moistureVal.innerText = '50%';
             ui.moistureFeedback.innerText = '✅ Optimal moisture! Flexible and strong.';
-            ui.moistureFeedback.className = 'text-xs text-green-600 font-bold leading-snug';
+            ui.moistureFeedback.className = 'text-[10px] md:text-xs text-green-600 font-bold leading-snug';
             ui.prepVisual.style.display = 'none';
-            ui.prepControls.classList.remove('opacity-50', 'pointer-events-none');
-            ui.weaveControls.classList.add('opacity-50', 'pointer-events-none');
-            ui.shapeControls.classList.add('hidden', 'opacity-50', 'pointer-events-none');
+
+            // Reset step indicator
+            ui.stepDot0.classList.add('active');
+            ui.stepDot0.classList.remove('completed');
+            ui.stepDot1.classList.remove('active', 'completed');
+            ui.stepDot2.classList.remove('active', 'completed');
+            ui.stepConn0.classList.remove('completed');
+            ui.stepConn1.classList.remove('completed');
+
+            // Reset panels
+            ui.stepPanelPrep.classList.remove('hidden');
+            ui.stepPanelWeave.classList.add('hidden');
+            ui.stepPanelShape.classList.add('hidden');
 
             // Reset skeleton UI
             document.getElementById('shape-select').disabled = false;
@@ -2247,6 +2557,7 @@
             ui.instruction.innerText = 'Adjust moisture and prepare the 3D bamboo.';
             ui.cultureContent.innerHTML = cultureData.prep;
             ui.patternSelect.value = 'checkerboard';
+            ui.weaveProgressText.innerText = 'Drag from the left to weave each row.';
 
             ui.modeToggle.style.display = 'flex';
             ui.btnModeCraft.className = 'active-craft';
@@ -2269,15 +2580,10 @@
 
         // ---------- INIT ON LOAD ----------
         window.addEventListener('load', function() {
-            // Small delay to ensure layout is stable
             setTimeout(() => {
                 init3D();
                 ui.cultureContent.innerHTML = cultureData.prep;
-
-                // Initial window resize after layout settles
                 setTimeout(onWindowResize, 200);
-
-                // Show a welcome toast
                 setTimeout(() => {
                     showToast('🌿 Welcome to the Virtual Bamboo Artisan Experience');
                 }, 800);
@@ -2289,18 +2595,127 @@
             setTimeout(onWindowResize, 400);
         });
 
-        // Prevent double-tap zoom on mobile for canvas
-        ui.canvas.addEventListener('touchstart', function(e) {
-            if (e.touches.length > 1) {
+        // ================================================================
+        //  ADDITIONAL ENHANCEMENTS — QUALITY OF LIFE
+        // ================================================================
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Don't trigger if user is typing in an input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+
+            // Escape closes lore modal
+            if (e.key === 'Escape' && state.loreOpen) {
+                toggleLoreModal();
+            }
+
+            // 'R' key resets
+            if (e.key === 'r' || e.key === 'R') {
+                if (e.ctrlKey || e.metaKey) return;
+                resetSim();
+            }
+
+            // 'L' key toggles lore
+            if (e.key === 'l' || e.key === 'L') {
+                if (e.ctrlKey || e.metaKey) return;
+                toggleLoreModal();
+            }
+
+            // 'F' key toggles focus mode
+            if (e.key === 'f' || e.key === 'F') {
+                if (e.ctrlKey || e.metaKey) return;
+                toggleZenMode();
+            }
+        });
+
+        // Prevent accidental page navigation on drag
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName !== 'INPUT') {
                 e.preventDefault();
             }
-        }, { passive: false });
+        });
 
-        // Ensure canvas doesn't scroll page on touch drag
-        ui.canvas.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        }, { passive: false });
+        // Smooth scroll behavior for the lore modal
+        ui.cultureContent.style.scrollBehavior = 'smooth';
 
+        // Add a subtle parallax effect to the header background
+        let lastScrollY = 0;
+        window.addEventListener('scroll', function() {
+            const scrollY = window.scrollY;
+            if (Math.abs(scrollY - lastScrollY) > 5) {
+                lastScrollY = scrollY;
+            }
+        }, { passive: true });
+
+        // Intersection Observer for step panels (animate in when visible)
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.step-panel').forEach(panel => {
+                observer.observe(panel);
+            });
+        }
+
+        // Add ripple effect to buttons on click (subtle)
+        document.querySelectorAll('.btn-compact, .lore-toggle-btn, .mode-toggle button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255,255,255,0.35)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'rippleEffect 0.6s ease-out forwards';
+                ripple.style.pointerEvents = 'none';
+
+                // Add keyframe dynamically if not exists
+                if (!document.getElementById('ripple-keyframes')) {
+                    const style = document.createElement('style');
+                    style.id = 'ripple-keyframes';
+                    style.textContent = `
+                        @keyframes rippleEffect {
+                            to { transform: scale(4); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                // Ensure parent has relative positioning and overflow hidden
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add a subtle glow pulse to the lore toggle button when it's the only interactive element
+        setInterval(() => {
+            if (!state.loreOpen && state.stage !== 'done') {
+                ui.loreToggleBtn.style.animation = 'none';
+                setTimeout(() => {
+                    ui.loreToggleBtn.style.animation = 'glow 2s ease-in-out infinite alternate';
+                }, 50);
+            }
+        }, 8000);
+
+        // ================================================================
+        //  END OF SCRIPT
+        // ================================================================
     </script>
 </body>
 </html>
