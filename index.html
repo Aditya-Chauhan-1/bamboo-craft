@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Virtual Bamboo Artisan · Shahdol Heritage</title>
     
-    <!-- Tailwind via CDN with custom configuration -->
+    <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -164,9 +164,6 @@
         @media (min-width: 768px) {
             .app-header { padding: 0.6rem 1.25rem; }
         }
-        @media (min-width: 1024px) {
-            .app-header { padding: 0.75rem 2rem; }
-        }
 
         /* ================================================================
            MAIN AREA — SIDEBAR + STAGE
@@ -199,13 +196,13 @@
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @media (min-width: 768px) {
-            .sidebar { width: 33.3333%; max-width: 380px; padding: 1.25rem; }
+            .sidebar { width: 340px; padding: 1.25rem; }
         }
         @media (min-width: 1024px) {
-            .sidebar { width: 25%; max-width: 400px; padding: 1.5rem; }
+            .sidebar { width: 380px; padding: 1.5rem; }
         }
         @media (min-width: 1280px) {
-            .sidebar { max-width: 420px; }
+            .sidebar { width: 420px; }
         }
 
         /* Sidebar sections */
@@ -261,6 +258,7 @@
             padding: 0.5rem;
             min-height: 0;
             overflow: hidden;
+            width: 100%;
         }
         @media (min-width: 768px) {
             .stage-center { padding: 1rem; }
@@ -272,7 +270,7 @@
         .canvas-wrapper {
             position: relative;
             width: 100%;
-            max-width: min(92vw, 680px);
+            max-width: min(85vw, 800px);
             aspect-ratio: 1 / 1;
             flex-shrink: 0;
             border-radius: 16px;
@@ -282,10 +280,7 @@
             touch-action: none;
         }
         @media (min-width: 1024px) {
-            .canvas-wrapper { max-width: min(75vw, 720px); }
-        }
-        @media (min-width: 1440px) {
-            .canvas-wrapper { max-width: 800px; }
+            .canvas-wrapper { max-width: min(70vw, 850px); }
         }
 
         canvas {
@@ -379,7 +374,7 @@
         .zen-mode #exit-zen-btn { display: flex !important; }
 
         /* ================================================================
-           LORE TOGGLE BUTTON (BULB) — FIXED POSITION
+           LORE TOGGLE BUTTON (BULB) — FIXED POSITION BOTTOM RIGHT
            ================================================================ */
         .lore-toggle-btn {
             position: fixed;
@@ -402,9 +397,6 @@
         }
         @media (min-width: 768px) {
             .lore-toggle-btn { width: 64px; height: 64px; bottom: 2rem; right: 2rem; }
-        }
-        @media (min-width: 1024px) {
-            .lore-toggle-btn { width: 68px; height: 68px; bottom: 2.5rem; right: 2.5rem; }
         }
         .lore-toggle-btn:hover {
             transform: scale(1.1);
@@ -472,9 +464,6 @@
         @media (min-width: 768px) {
             .lore-modal { max-width: 600px; max-height: 75vh; }
         }
-        @media (min-width: 1024px) {
-            .lore-modal { max-width: 680px; }
-        }
         .lore-modal-overlay.open .lore-modal {
             transform: scale(1) translateY(0);
             opacity: 1;
@@ -489,10 +478,6 @@
             flex-shrink: 0;
             background: linear-gradient(135deg, #eef3e0, #d9e6c0);
         }
-        @media (min-width: 768px) {
-            .lore-modal-header { padding: 1.25rem 1.5rem; }
-        }
-
         .lore-modal-body {
             padding: 1rem 1.25rem;
             overflow-y: auto;
@@ -500,10 +485,6 @@
             flex: 1 1 auto;
             min-height: 0;
         }
-        @media (min-width: 768px) {
-            .lore-modal-body { padding: 1.25rem 1.5rem; }
-        }
-
         .lore-modal-close {
             width: 36px;
             height: 36px;
@@ -552,9 +533,6 @@
             text-align: center;
             max-width: 100%;
             padding: 0 0.5rem;
-        }
-        @media (min-width: 768px) {
-            .instruction-text { font-size: 1rem; }
         }
 
         /* ================================================================
@@ -675,9 +653,6 @@
             flex-shrink: 0;
             transition: all 0.3s ease;
         }
-        @media (min-width: 768px) {
-            .stage-badge { font-size: 11px; padding: 5px 14px; }
-        }
 
         /* ================================================================
            MODE TOGGLE
@@ -705,9 +680,6 @@
             border: none;
             cursor: pointer;
             background: transparent;
-        }
-        @media (min-width: 768px) {
-            .mode-toggle button { font-size: 12px; padding: 7px 18px; }
         }
         .mode-toggle button.active-craft {
             background: linear-gradient(135deg, #4d6b2c, #3d5525);
@@ -757,10 +729,6 @@
            ================================================================ */
         .step-panel {
             animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* ================================================================
@@ -898,13 +866,6 @@
             .sidebar.open {
                 transform: translateX(0);
             }
-        }
-
-        /* ================================================================
-           LANDSCAPE PHONE — HIDE SOME ELEMENTS
-           ================================================================ */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .canvas-wrapper { max-width: min(50vw, 60vh); }
         }
 
         /* ================================================================
@@ -2623,31 +2584,6 @@
 
         // Smooth scroll behavior for the lore modal
         ui.cultureContent.style.scrollBehavior = 'smooth';
-
-        // Add a subtle parallax effect to the header background
-        let lastScrollY = 0;
-        window.addEventListener('scroll', function() {
-            const scrollY = window.scrollY;
-            if (Math.abs(scrollY - lastScrollY) > 5) {
-                lastScrollY = scrollY;
-            }
-        }, { passive: true });
-
-        // Intersection Observer for sidebar sections (animate in when visible)
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.sidebar-section').forEach(panel => {
-                observer.observe(panel);
-            });
-        }
 
         // Add ripple effect to buttons on click (subtle)
         document.querySelectorAll('.btn-primary, .lore-toggle-btn, .mode-toggle button').forEach(btn => {
