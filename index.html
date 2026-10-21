@@ -120,7 +120,7 @@
         /* ================================================================
            SCROLLBAR STYLING
            ================================================================ */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.03); border-radius: 8px; }
         ::-webkit-scrollbar-thumb { background: #b99e7f; border-radius: 8px; }
         ::-webkit-scrollbar-thumb:hover { background: #8f6e52; }
@@ -252,21 +252,32 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Changed to flex-start for scroll */
             background: linear-gradient(160deg, #f5f3ef 0%, #e8e4dc 100%);
             position: relative;
             padding: 1rem;
             min-height: 0;
-            overflow: hidden;
+            overflow-y: auto; /* ADDED: Allows vertical scrolling */
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
             width: 100%;
+        }
+
+        .canvas-scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100%;
+            padding: 1rem 0; /* Space for scrolling */
         }
 
         .canvas-wrapper {
             position: relative;
             width: 100%;
-            /* Responsive sizing to ensure it fits inside the available space and allows scrolling if constrained */
-            max-width: min(80vw, 800px);
-            max-height: calc(100vh - 160px);
+            /* Responsive sizing that allows it to shrink to fit but keep aspect ratio */
+            max-width: min(85vw, 800px);
             aspect-ratio: 1 / 1;
             flex-shrink: 0;
             border-radius: 16px;
@@ -360,10 +371,9 @@
             width: 100vw;
             height: 100vh;
             padding: 0;
-            overflow: auto; /* Allows scrolling if canvas doesn't fit tiny screens */
+            overflow: auto; 
         }
         
-        /* Canvas override for zen mode */
         .zen-mode .canvas-wrapper {
             max-width: min(95vw, 95vh);
             max-height: min(95vw, 95vh);
@@ -1073,38 +1083,41 @@
                     Exit Focus
                 </button>
 
-                <!-- Canvas Container -->
-                <div class="canvas-wrapper" id="canvas-wrapper">
-                    <canvas id="sim-canvas"></canvas>
+                <!-- Wrapper to handle scrolling -->
+                <div class="canvas-scroll-container">
+                    <!-- Canvas Container -->
+                    <div class="canvas-wrapper" id="canvas-wrapper">
+                        <canvas id="sim-canvas"></canvas>
 
-                    <!-- Drag hint overlay -->
-                    <div id="drag-hint" class="drag-hint">
-                        <div class="hint-bubble">
-                            <span>Drag</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
+                        <!-- Drag hint overlay -->
+                        <div id="drag-hint" class="drag-hint">
+                            <div class="hint-bubble">
+                                <span>Drag</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Stage 1 HTML overlay (bamboo stalk visual) -->
+                        <div id="prep-visual" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-14 h-56 md:w-16 md:h-64 bg-gradient-to-b from-green-500 via-green-600 to-green-700 rounded-full shadow-2xl transition-all duration-300 relative overflow-hidden" id="bamboo-stalk">
+                                <div class="absolute w-full h-0.5 bg-green-900/30 top-1/4"></div>
+                                <div class="absolute w-full h-0.5 bg-green-900/30 top-2/4"></div>
+                                <div class="absolute w-full h-0.5 bg-green-900/30 top-3/4"></div>
+                                <div class="absolute w-full h-0.5 bg-green-900/20 top-1/8"></div>
+                                <div class="absolute w-full h-0.5 bg-green-900/20 top-3/8"></div>
+                                <div class="absolute w-full h-0.5 bg-green-900/20 top-5/8"></div>
+                                <div class="absolute w-full h-0.5 bg-green-900/20 top-7/8"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Stage 1 HTML overlay (bamboo stalk visual) -->
-                    <div id="prep-visual" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div class="w-14 h-56 md:w-16 md:h-64 bg-gradient-to-b from-green-500 via-green-600 to-green-700 rounded-full shadow-2xl transition-all duration-300 relative overflow-hidden" id="bamboo-stalk">
-                            <div class="absolute w-full h-0.5 bg-green-900/30 top-1/4"></div>
-                            <div class="absolute w-full h-0.5 bg-green-900/30 top-2/4"></div>
-                            <div class="absolute w-full h-0.5 bg-green-900/30 top-3/4"></div>
-                            <div class="absolute w-full h-0.5 bg-green-900/20 top-1/8"></div>
-                            <div class="absolute w-full h-0.5 bg-green-900/20 top-3/8"></div>
-                            <div class="absolute w-full h-0.5 bg-green-900/20 top-5/8"></div>
-                            <div class="absolute w-full h-0.5 bg-green-900/20 top-7/8"></div>
-                        </div>
+                    <div class="mt-2 md:mt-4 text-center px-4 w-full mb-8">
+                        <p id="canvas-instruction" class="instruction-text">
+                            Adjust moisture and prepare the bamboo.
+                        </p>
                     </div>
-                </div>
-
-                <div class="mt-2 md:mt-4 text-center px-4 w-full">
-                    <p id="canvas-instruction" class="instruction-text">
-                        Adjust moisture and prepare the bamboo.
-                    </p>
                 </div>
             </section>
 
